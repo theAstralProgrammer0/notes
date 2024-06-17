@@ -1,0 +1,4 @@
+ssh-keygen -t rsa -b 4096 -C “replace-this-text-with-your-GitHub-email”
+eval “$(ssh-agent -s)”
+cat ~/.ssh/id_rsa.pub 
+

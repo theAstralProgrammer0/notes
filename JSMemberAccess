@@ -1,0 +1,174 @@
+Property accessors
+Property accessors provide access to an object's properties by using the dot notation or the bracket notation.
+
+Try it
+
+Syntax
+JS
+Copy to Clipboard
+object.propertyName
+object[expression]
+object.#privateProperty
+Description
+One can think of an object as an associative array (a.k.a. map, dictionary, hash, lookup table). The keys in this array are the names of the object's properties.
+
+There are two ways to access properties: dot notation and bracket notation.
+
+Dot notation
+In the object.propertyName syntax, the propertyName must be a valid JavaScript identifier which can also be a reserved word. For example, object.$1 is valid, while object.1 is not.
+
+JS
+Copy to Clipboard
+const variable = object.propertyName;
+object.propertyName = value;
+JS
+Copy to Clipboard
+const object = {};
+object.$1 = "foo";
+console.log(object.$1); // 'foo'
+JS
+Copy to Clipboard
+const object = {};
+object.1 = 'bar'; // SyntaxError
+console.log(object.1); // SyntaxError
+Here, the method named createElement is retrieved from document and is called.
+
+JS
+Copy to Clipboard
+document.createElement("pre");
+If you use a method for a numeric literal, and the numeric literal has no exponent and no decimal point, you should leave white-space(s) before the dot preceding the method call, so that the dot is not interpreted as a decimal point.
+
+JS
+Copy to Clipboard
+77 .toExponential();
+// or
+77
+.toExponential();
+// or
+(77).toExponential();
+// or
+77..toExponential();
+// or
+77.0.toExponential();
+// because 77. === 77.0, no ambiguity
+In addition, private properties can only be accessed using dot notation within the class that defines them.
+
+Bracket notation
+In the object[expression] syntax, the expression should evaluate to a string or Symbol that represents the property's name. So, it can be any string literal, for example, including '1foo', '!bar!', or even ' ' (a space).
+
+JS
+Copy to Clipboard
+const variable = object[propertyName];
+object[propertyName] = value;
+This does the exact same thing as the previous example.
+
+JS
+Copy to Clipboard
+document["createElement"]("pre");
+A space before bracket notation is allowed.
+
+JS
+Copy to Clipboard
+document ["createElement"]("pre");
+Passing expressions that evaluate to property name will do the same thing as directly passing the property name.
+
+JS
+Copy to Clipboard
+const key = "name";
+const getKey = () => "name";
+const Obj = { name: "Michel" };
+
+Obj["name"]; // returns "Michel"
+Obj[key]; // evaluates to Obj["name"], and returns "Michel"
+Obj[getKey()]; // evaluates to Obj["name"], and returns "Michel"
+However, beware of using square brackets to access properties whose names are given by external input. This may make your code susceptible to object injection attacks.
+
+Property names
+Each property name is a string or a Symbol. Any other value, including a number, is coerced to a string. This outputs 'value', since 1 is coerced into '1'.
+
+JS
+Copy to Clipboard
+const object = {};
+object["1"] = "value";
+console.log(object[1]);
+This also outputs 'value', since both foo and bar are converted to the same string ("[object Object]").
+
+JS
+Copy to Clipboard
+const foo = { uniqueProp: 1 };
+const bar = { uniqueProp: 2 };
+const object = {};
+object[foo] = "value";
+console.log(object[bar]);
+Method binding
+It's typical when speaking of an object's properties to make a distinction between properties and methods. However, the property/method distinction is little more than a convention. A method is a property that can be called (for example, if it has a reference to a Function instance as its value).
+
+A method is not bound to the object that it is a property of. Specifically, this is not fixed in a method and does not necessarily refer to the object containing the method. Instead, this is "passed" by the function call. See the reference for this.
+
+Examples
+Bracket notation vs. eval()
+JavaScript novices often make the mistake of using eval() where the bracket notation can be used instead.
+
+For example, the following syntax is often seen in many scripts.
+
+JS
+Copy to Clipboard
+const x = eval(`document.forms.form_name.elements.${strFormControl}.value`);
+eval() is slow and should be avoided whenever possible. Also, strFormControl would have to hold an identifier, which is not required for names and ids of form controls. It is better to use bracket notation instead:
+
+JS
+Copy to Clipboard
+const x = document.forms.form_name.elements[strFormControl].value;
+Specifications
+Specification
+ECMAScript Language Specification
+# sec-property-accessors
+Browser compatibility
+Report problems with this compatibility data on GitHub
+desktop	mobile	server
+Chrome
+Edge
+Firefox
+Opera
+Safari
+Chrome Android
+Firefox for Android
+Opera Android
+Safari on iOS
+Samsung Internet
+WebView Android
+Deno
+Node.js
+Property accessors
+
+1
+Toggle history	
+12
+Toggle history	
+1
+Toggle history	
+4
+Toggle history	
+1
+Toggle history	
+18
+Toggle history	
+4
+Toggle history	
+10.1
+Toggle history	
+1
+Toggle history	
+1.0
+Toggle history	
+4.4
+Toggle history	
+1.0
+Toggle history	
+0.10.0
+Toggle history
+Legend
+Tip: you can click/tap on a cell for more information.
+
+Full support
+Full support

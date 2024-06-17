@@ -1,0 +1,34 @@
+Type coercion
+As mentioned above, JavaScript is a weakly typed language. This means that you can often use a value of one type where another type is expected, and the language will convert it to the right type for you. To do so, JavaScript defines a handful of coercion rules.
+
+Primitive coercion
+The primitive coercion process is used where a primitive value is expected, but there's no strong preference for what the actual type should be. This is usually when a string, a number, or a BigInt are equally acceptable. For example:
+
+The Date() constructor, when it receives one argument that's not a Date instance — strings represent date strings, while numbers represent timestamps.
+The + operator — if one operand is a string, string concatenation is performed; otherwise, numeric addition is performed.
+The == operator — if one operand is a primitive while the other is an object, the object is converted to a primitive value with no preferred type.
+This operation does not do any conversion if the value is already a primitive. Objects are converted to primitives by calling its [@@toPrimitive]() (with "default" as hint), valueOf(), and toString() methods, in that order. Note that primitive conversion calls valueOf() before toString(), which is similar to the behavior of number coercion but different from string coercion.
+
+The [@@toPrimitive]() method, if present, must return a primitive — returning an object results in a TypeError. For valueOf() and toString(), if one returns an object, the return value is ignored and the other's return value is used instead; if neither is present, or neither returns a primitive, a TypeError is thrown. For example, in the following code:
+
+JS
+Copy to Clipboard
+console.log({} + []); // "[object Object]"
+Neither {} nor [] have a [@@toPrimitive]() method. Both {} and [] inherit valueOf() from Object.prototype.valueOf, which returns the object itself. Since the return value is an object, it is ignored. Therefore, toString() is called instead. {}.toString() returns "[object Object]", while [].toString() returns "", so the result is their concatenation: "[object Object]".
+
+The [@@toPrimitive]() method always takes precedence when doing conversion to any primitive type. Primitive conversion generally behaves like number conversion, because valueOf() is called in priority; however, objects with custom [@@toPrimitive]() methods can choose to return any primitive. Date and Symbol objects are the only built-in objects that override the [@@toPrimitive]() method. Date.prototype[@@toPrimitive]() treats the "default" hint as if it's "string", while Symbol.prototype[@@toPrimitive]() ignores the hint and always returns a symbol.
+
+Numeric coercion
+There are two numeric types: Number and BigInt. Sometimes the language specifically expects a number or a BigInt (such as Array.prototype.slice(), where the index must be a number); other times, it may tolerate either and perform different operations depending on the operand's type. For strict coercion processes that do not allow implicit conversion from the other type, see number coercion and BigInt coercion.
+
+Numeric coercion is nearly the same as number coercion, except that BigInts are returned as-is instead of causing a TypeError. Numeric coercion is used by all arithmetic operators, since they are overloaded for both numbers and BigInts. The only exception is unary plus, which always does number coercion.
+
+Other coercions
+All data types, except Null, Undefined, and Symbol, have their respective coercion process. See string coercion, boolean coercion, and object coercion for more details.
+
+As you may have noticed, there are three distinct paths through which objects may be converted to primitives:
+
+Primitive coercion: [@@toPrimitive]("default") → valueOf() → toString()
+Numeric coercion, number coercion, BigInt coercion: [@@toPrimitive]("number") → valueOf() → toString()
+String coercion: [@@toPrimitive]("string") → toString() → valueOf()
+In all cases, [@@toPrimitive](), if present, must be callable and return a primitive, while valueOf or toString will be ignored if they are not callable or return an object. At the end of the process, if successful, the result is guaranteed to be a primitive. The resulting primitive is then subject to further coercions depending on the context.

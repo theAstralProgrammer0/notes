@@ -1,0 +1,330 @@
+Operator precedence
+Operator precedence determines how operators are parsed concerning each other. Operators with higher precedence become the operands of operators with lower precedence.
+
+Try it
+
+Precedence and associativity
+Consider an expression describable by the representation below, where both OP1 and OP2 are fill-in-the-blanks for OPerators.
+
+a OP1 b OP2 c
+The combination above has two possible interpretations:
+
+(a OP1 b) OP2 c
+a OP1 (b OP2 c)
+Which one the language decides to adopt depends on the identity of OP1 and OP2.
+
+If OP1 and OP2 have different precedence levels (see the table below), the operator with the higher precedence goes first and associativity does not matter. Observe how multiplication has higher precedence than addition and executed first, even though addition is written first in the code.
+
+JS
+Copy to Clipboard
+console.log(3 + 10 * 2); // 23
+console.log(3 + (10 * 2)); // 23, because parentheses here are superfluous
+console.log((3 + 10) * 2); // 26, because the parentheses change the order
+Within operators of the same precedence, the language groups them by associativity. Left-associativity (left-to-right) means that it is interpreted as (a OP1 b) OP2 c, while right-associativity (right-to-left) means it is interpreted as a OP1 (b OP2 c). Assignment operators are right-associative, so you can write:
+
+JS
+Copy to Clipboard
+a = b = 5; // same as writing a = (b = 5);
+with the expected result that a and b get the value 5. This is because the assignment operator returns the value that is assigned. First, b is set to 5. Then the a is also set to 5 — the return value of b = 5, a.k.a. right operand of the assignment.
+
+As another example, the unique exponentiation operator has right-associativity, whereas other arithmetic operators have left-associativity.
+
+JS
+Copy to Clipboard
+const a = 4 ** 3 ** 2; // Same as 4 ** (3 ** 2); evaluates to 262144
+const b = 4 / 3 / 2; // Same as (4 / 3) / 2; evaluates to 0.6666...
+Operators are first grouped by precedence, and then, for adjacent operators that have the same precedence, by associativity. So, when mixing division and exponentiation, the exponentiation always comes before the division. For example, 2 ** 3 / 3 ** 2 results in 0.8888888888888888 because it is the same as (2 ** 3) / (3 ** 2).
+
+For prefix unary operators, suppose we have the following pattern:
+
+OP1 a OP2 b
+where OP1 is a prefix unary operator and OP2 is a binary operator. If OP1 has higher precedence than OP2, then it would be grouped as (OP1 a) OP2 b; otherwise, it would be OP1 (a OP2 b).
+
+JS
+Copy to Clipboard
+const a = 1;
+const b = 2;
+typeof a + b; // Equivalent to (typeof a) + b; result is "number2"
+If the unary operator is on the second operand:
+
+a OP2 OP1 b
+Then the binary operator OP2 must have lower precedence than the unary operator OP1 for it to be grouped as a OP2 (OP1 b). For example, the following is invalid:
+
+JS
+Copy to Clipboard
+function* foo() {
+  a + yield 1;
+}
+Because + has higher precedence than yield, this would become (a + yield) 1 — but because yield is a reserved word in generator functions, this would be a syntax error. Luckily, most unary operators have higher precedence than binary operators and do not suffer from this pitfall.
+
+If we have two prefix unary operators:
+
+OP1 OP2 a
+Then the unary operator closer to the operand, OP2, must have higher precedence than OP1 for it to be grouped as OP1 (OP2 a). It's possible to get it the other way and end up with (OP1 OP2) a:
+
+JS
+Copy to Clipboard
+async function* foo() {
+  await yield 1;
+}
+Because await has higher precedence than yield, this would become (await yield) 1, which is awaiting an identifier called yield, and a syntax error. Similarly, if you have new !A;, because ! has lower precedence than new, this would become (new !) A, which is obviously invalid. (This code looks nonsensical to write anyway, since !A always produces a boolean, not a constructor function.)
+
+For postfix unary operators (namely, ++ and --), the same rules apply. Luckily, both operators have higher precedence than any binary operator, so the grouping is always what you would expect. Moreover, because ++ evaluates to a value, not a reference, you can't chain multiple increments together either, as you may do in C.
+
+JS
+Copy to Clipboard
+let a = 1;
+a++++; // SyntaxError: Invalid left-hand side in postfix operation.
+Operator precedence will be handled recursively. For example, consider this expression:
+
+JS
+Copy to Clipboard
+1 + 2 ** 3 * 4 / 5 >> 6
+First, we group operators with different precedence by decreasing levels of precedence.
+
+The ** operator has the highest precedence, so it's grouped first.
+Looking around the ** expression, it has * on the right and + on the left. * has higher precedence, so it's grouped first. * and / have the same precedence, so we group them together for now.
+Looking around the *// expression grouped in 2, because + has higher precedence than >>, the former is grouped.
+JS
+Copy to Clipboard
+   (1 + ( (2 ** 3) * 4 / 5) ) >> 6
+// │    │ └─ 1. ─┘        │ │
+// │    └────── 2. ───────┘ │
+// └────────── 3. ──────────┘
+Within the *// group, because they are both left-associative, the left operand would be grouped.
+
+JS
+Copy to Clipboard
+   (1 + ( ( (2 ** 3) * 4 ) / 5) ) >> 6
+// │    │ │ └─ 1. ─┘     │    │ │
+// │    └─│─────── 2. ───│────┘ │
+// └──────│───── 3. ─────│──────┘
+//        └───── 4. ─────┘
+Note that operator precedence and associativity only affect the order of evaluation of operators (the implicit grouping), but not the order of evaluation of operands. The operands are always evaluated from left-to-right. The higher-precedence expressions are always evaluated first, and their results are then composed according to the order of operator precedence.
+
+JS
+Copy to Clipboard
+function echo(name, num) {
+  console.log(`Evaluating the ${name} side`);
+  return num;
+}
+// Exponentiation operator (**) is right-associative,
+// but all call expressions (echo()), which have higher precedence,
+// will be evaluated before ** does
+console.log(echo("left", 4) ** echo("middle", 3) ** echo("right", 2));
+// Evaluating the left side
+// Evaluating the middle side
+// Evaluating the right side
+// 262144
+
+// Exponentiation operator (**) has higher precedence than division (/),
+// but evaluation always starts with the left operand
+console.log(echo("left", 4) / echo("middle", 3) ** echo("right", 2));
+// Evaluating the left side
+// Evaluating the middle side
+// Evaluating the right side
+// 0.4444444444444444
+If you are familiar with binary trees, think about it as a post-order traversal.
+
+                /
+       ┌────────┴────────┐
+echo("left", 4)         **
+                ┌────────┴────────┐
+        echo("middle", 3)  echo("right", 2)
+After all operators have been properly grouped, the binary operators would form a binary tree. Evaluation starts from the outermost group — which is the operator with the lowest precedence (/ in this case). The left operand of this operator is first evaluated, which may be composed of higher-precedence operators (such as a call expression echo("left", 4)). After the left operand has been evaluated, the right operand is evaluated in the same fashion. Therefore, all leaf nodes — the echo() calls — would be visited left-to-right, regardless of the precedence of operators joining them.
+
+Short-circuiting
+In the previous section, we said "the higher-precedence expressions are always evaluated first" — this is generally true, but it has to be amended with the acknowledgement of short-circuiting, in which case an operand may not be evaluated at all.
+
+Short-circuiting is jargon for conditional evaluation. For example, in the expression a && (b + c), if a is falsy, then the sub-expression (b + c) will not even get evaluated, even if it is grouped and therefore has higher precedence than &&. We could say that the logical AND operator (&&) is "short-circuited". Along with logical AND, other short-circuited operators include logical OR (||), nullish coalescing (??), and optional chaining (?.).
+
+JS
+Copy to Clipboard
+a || (b * c); // evaluate `a` first, then produce `a` if `a` is "truthy"
+a && (b < c); // evaluate `a` first, then produce `a` if `a` is "falsy"
+a ?? (b || c); // evaluate `a` first, then produce `a` if `a` is not `null` and not `undefined`
+a?.b.c; // evaluate `a` first, then produce `undefined` if `a` is `null` or `undefined`
+When evaluating a short-circuited operator, the left operand is always evaluated. The right operand will only be evaluated if the left operand cannot determine the result of the operation.
+
+Note: The behavior of short-circuiting is baked in these operators. Other operators would always evaluate both operands, regardless if that's actually useful — for example, NaN * foo() will always call foo, even when the result would never be something other than NaN.
+
+The previous model of a post-order traversal still stands. However, after the left subtree of a short-circuiting operator has been visited, the language will decide if the right operand needs to be evaluated. If not (for example, because the left operand of || is already truthy), the result is directly returned without visiting the right subtree.
+
+Consider this case:
+
+JS
+Copy to Clipboard
+function A() { console.log('called A'); return false; }
+function B() { console.log('called B'); return false; }
+function C() { console.log('called C'); return true; }
+
+console.log(C() || B() && A());
+
+// Logs:
+// called C
+// true
+Only C() is evaluated, despite && having higher precedence. This does not mean that || has higher precedence in this case — it's exactly because (B() && A()) has higher precedence that causes it to be neglected as a whole. If it's re-arranged as:
+
+JS
+Copy to Clipboard
+console.log(A() && C() || B());
+// Logs:
+// called A
+// called B
+// false
+Then the short-circuiting effect of && would only prevent C() from being evaluated, but because A() && C() as a whole is false, B() would still be evaluated.
+
+However, note that short-circuiting does not change the final evaluation outcome. It only affects the evaluation of operands, not how operators are grouped — if evaluation of operands doesn't have side effects (for example, logging to the console, assigning to variables, throwing an error), short-circuiting would not be observable at all.
+
+The assignment counterparts of these operators (&&=, ||=, ??=) are short-circuited as well. They are short-circuited in a way that the assignment does not happen at all.
+
+Table
+The following table lists operators in order from highest precedence (18) to lowest precedence (1).
+
+Several general notes about the table:
+
+Not all syntax included here are "operators" in the strict sense. For example, spread ... and arrow => are typically not regarded as operators. However, we still included them to show how tightly they bind compared to other operators/expressions.
+Some operators have certain operands that require expressions narrower than those produced by higher-precedence operators. For example, the right-hand side of member access . (precedence 17) must be an identifier instead of a grouped expression. The left-hand side of arrow => (precedence 2) must be an arguments list or a single identifier instead of some random expression.
+Some operators have certain operands that accept expressions wider than those produced by higher-precedence operators. For example, the bracket-enclosed expression of bracket notation [ … ] (precedence 17) can be any expression, even comma (precedence 1) joined ones. These operators act as if that operand is "automatically grouped". In this case we will omit the associativity.
+Precedence	Associativity	Individual
+operators	Notes
+18: grouping	n/a	Grouping
+(x)	[1]
+17: access and call	left-to-right	Member access
+x.y	[2]
+Optional chaining
+x?.y
+n/a	Computed member access
+x[y]	[3]
+new with argument list
+new x(y)	[4]
+Function call
+x(y)
+import(x)
+16: new	n/a	new without argument list
+new x
+15: postfix operators	n/a	Postfix increment
+x++	[5]
+Postfix decrement
+x--
+14: prefix operators	n/a	Prefix increment
+++x	[6]
+Prefix decrement
+--x
+Logical NOT
+!x
+Bitwise NOT
+~x
+Unary plus
++x
+Unary negation
+-x
+typeof x
+void x
+delete x	[7]
+await x
+13: exponentiation	right-to-left	Exponentiation
+x ** y	[8]
+12: multiplicative operators	left-to-right	Multiplication
+x * y
+Division
+x / y
+Remainder
+x % y
+11: additive operators	left-to-right	Addition
+x + y
+Subtraction
+x - y
+10: bitwise shift	left-to-right	Left shift
+x << y
+Right shift
+x >> y
+Unsigned right shift
+x >>> y
+9: relational operators	left-to-right	Less than
+x < y
+Less than or equal
+x <= y
+Greater than
+x > y
+Greater than or equal
+x >= y
+x in y
+x instanceof y
+8: equality operators	left-to-right	Equality
+x == y
+Inequality
+x != y
+Strict equality
+x === y
+Strict inequality
+x !== y
+7: bitwise AND	left-to-right	Bitwise AND
+x & y
+6: bitwise XOR	left-to-right	Bitwise XOR
+x ^ y
+5: bitwise OR	left-to-right	Bitwise OR
+x | y
+4: logical AND	left-to-right	Logical AND
+x && y
+3: logical OR, nullish coalescing	left-to-right	Logical OR
+x || y
+Nullish coalescing operator
+x ?? y	[9]
+2: assignment and miscellaneous	right-to-left	Assignment
+x = y	[10]
+Addition assignment
+x += y
+Subtraction assignment
+x -= y
+Exponentiation assignment
+x **= y
+Multiplication assignment
+x *= y
+Division assignment
+x /= y
+Remainder assignment
+x %= y
+Left shift assignment
+x <<= y
+Right shift assignment
+x >>= y
+Unsigned right shift assignment
+x >>>= y
+Bitwise AND assignment
+x &= y
+Bitwise XOR assignment
+x ^= y
+Bitwise OR assignment
+x |= y
+Logical AND assignment
+x &&= y
+Logical OR assignment
+x ||= y
+Nullish coalescing assignment
+x ??= y
+right-to-left	Conditional (ternary) operator
+x ? y : z	[11]
+right-to-left	Arrow
+x => y	[12]
+n/a	yield x
+yield* x
+Spread
+...x	[13]
+1: comma	left-to-right	Comma operator
+x, y
+Notes:
+
+The operand can be any expression.
+The "right-hand side" must be an identifier.
+The "right-hand side" can be any expression.
+The "right-hand side" is a comma-separated list of any expression with precedence > 1 (i.e. not comma expressions).
+The operand must be a valid assignment target (identifier or property access). Its precedence means new Foo++ is (new Foo)++ (a syntax error) and not new (Foo++) (a TypeError: (Foo++) is not a constructor).
+The operand must be a valid assignment target (identifier or property access).
+The operand cannot be an identifier or a private property access.
+The left-hand side cannot have precedence 14.
+The operands cannot be a logical OR || or logical AND && operator without grouping.
+The "left-hand side" must be a valid assignment target (identifier or property access).
+The associativity means the two expressions after ? are implicitly grouped.
+The "left-hand side" is a single identifier or a parenthesized parameter list.
+Only valid inside object literals, array literals, or argument lists.

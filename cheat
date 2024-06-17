@@ -1,0 +1,32 @@
+- cat /etc/passwd: The /etc/passwd file contains a list of all user accounts on
+		   the system, along with some basic information about each account.
+
+- getent passwd: This command fetches entries from databases configured in
+		 /etc/nsswitch.conf, which includes the local /etc/passwd file
+		 as well as other sources such as LDAP.
+
+- cut -d: -f1 /etc/passwd: This command extracts just the usernames from the
+			   /etc/passwd file using the cut command, which cuts
+			   sections from each line of files.
+
+- awk -F: '{ print $1 }' /etc/passwd: Similar to the cut command, this awk
+				      command prints the first field (username)
+				      from each line of the /etc/passwd file.			   
+
+- getent passwd <username>: To find the home directory of a user in a Linux
+			    machine, you can use the getent command followed by
+			    the username.				      
+
+- getent passwd <username> | awk -F: '{print $6}': You can directly extract the
+						   home directory of a user
+						   using commands like grep or
+						   awk			    
+
+- pgrep nginx: You can use the pgrep command to find the PID (Process ID) of a
+	       process by its name. This command will output the PID(s) of the
+	       processes matching the specified name.
+
+- pgrep -o nginx: If you want to get the main PID (the first PID in the list),
+		  you can use pgrep with the -o option to only display the
+		  oldest PID
+						   

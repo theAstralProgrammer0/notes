@@ -1,0 +1,33 @@
+Step 1 — Using the Docker Command
+
+	Using `docker` 
+	consists of passing it a chain of options and commands
+	followed by arguments.
+	The syntax takes this form:
+
+		->	docker [option] [command] [arguments]
+
+	To view all available subcommands, type:
+
+		->	docker
+
+	To view the options available to a specific command, type:
+
+		->	docker `docker-subcommand` --help
+
+	To view system-wide information about Docker, use:
+
+		->	docker info
+
+	Let’s explore some of these commands.
+	We’ll start by working with images.
+
+
+Step 2 — Working with Docker Images
+
+	Docker containers are built from Docker images.
+	By default, Docker pulls these images from <Docker Hub/>,
+	a Docker registry managed by Docker, the company behind the Docker project. Anyone can host their Docker images on Docker Hub, so most applications and Linux distributions you’ll need will have images hosted there.
+
+To check whether you can access and download images from Docker Hub, type:
+

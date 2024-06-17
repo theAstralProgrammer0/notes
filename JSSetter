@@ -1,0 +1,203 @@
+set
+The set syntax binds an object property to a function to be called when there is an attempt to set that property. It can also be used in classes.
+
+Try it
+
+Syntax
+JS
+Copy to Clipboard
+{ set prop(val) { /* … */ } }
+{ set [expression](val) { /* … */ } }
+There are some additional syntax restrictions:
+
+A setter must have exactly one parameter.
+Parameters
+prop
+The name of the property to bind to the given function. In the same way as other properties in object initializers, it can be a string literal, a number literal, or an identifier.
+
+val
+An alias for the variable that holds the value attempted to be assigned to prop.
+
+expression
+You can also use expressions for a computed property name to bind to the given function.
+
+Description
+In JavaScript, a setter can be used to execute a function whenever an attempt is made to change a property's value. Setters are most often used in conjunction with getters.
+
+An object property is either a data property or an accessor property, but it cannot simultaneously be both. Read Object.defineProperty() for more information. The setter syntax allows you to specify the setter function in an object initializer.
+
+JS
+Copy to Clipboard
+const obj = {
+  set prop() {
+    // setter, the code executed when setting obj.prop
+  },
+}
+Properties defined using this syntax are own properties of the created object, and they are configurable and enumerable.
+
+Examples
+Defining a setter on new objects in object initializers
+The following example defines a pseudo-property current of object language. When current is assigned a value, it updates log with that value:
+
+JS
+Copy to Clipboard
+const language = {
+  set current(name) {
+    this.log.push(name);
+  },
+  log: [],
+};
+
+language.current = "EN";
+console.log(language.log); // ['EN']
+
+language.current = "FA";
+console.log(language.log); // ['EN', 'FA']
+Note that current is not defined, and any attempts to access it will result in undefined.
+
+Using setters in classes
+You can use the exact same syntax to define public instance setters that are available on class instances. In classes, you don't need the comma separator between methods.
+
+JS
+Copy to Clipboard
+class ClassWithGetSet {
+  #msg = "hello world";
+  get msg() {
+    return this.#msg;
+  }
+  set msg(x) {
+    this.#msg = `hello ${x}`;
+  }
+}
+
+const instance = new ClassWithGetSet();
+console.log(instance.msg); // "hello world"
+
+instance.msg = "cake";
+console.log(instance.msg); // "hello cake"
+Setter properties are defined on the prototype property of the class and are thus shared by all instances of the class. Unlike setter properties in object literals, setter properties in classes are not enumerable.
+
+Static setters and private setters use similar syntaxes, which are described in the static and private properties pages.
+
+Removing a setter with the delete operator
+If you want to remove the setter, you can just delete it:
+
+JS
+Copy to Clipboard
+delete language.current;
+Defining a setter on existing objects using defineProperty
+To append a setter to an existing object, use Object.defineProperty().
+
+JS
+Copy to Clipboard
+const o = { a: 0 };
+
+Object.defineProperty(o, "b", {
+  set(x) {
+    this.a = x / 2;
+  },
+});
+
+o.b = 10;
+// Runs the setter, which assigns 10 / 2 (5) to the 'a' property
+
+console.log(o.a); // 5
+Using a computed property name
+JS
+Copy to Clipboard
+const expr = "foo";
+
+const obj = {
+  baz: "bar",
+  set [expr](v) {
+    this.baz = v;
+  },
+};
+
+console.log(obj.baz); // "bar"
+
+obj.foo = "baz";
+// Run the setter
+
+console.log(obj.baz); // "baz"
+Specifications
+Specification
+ECMAScript Language Specification
+# sec-method-definitions
+Browser compatibility
+Report problems with this compatibility data on GitHub
+desktop	mobile	server
+Chrome
+Edge
+Firefox
+Opera
+Safari
+Chrome Android
+Firefox for Android
+Opera Android
+Safari on iOS
+Samsung Internet
+WebView Android
+Deno
+Node.js
+set
+
+1
+Toggle history	
+12
+Toggle history	
+1.5
+Toggle history	
+9.5
+Toggle history	
+3
+Toggle history	
+18
+Toggle history	
+4
+Toggle history	
+14
+Toggle history	
+1
+Toggle history	
+1.0
+Toggle history	
+4.4
+Toggle history	
+1.0
+Toggle history	
+0.10.0
+Toggle history
+Computed property names
+
+46
+Toggle history	
+12
+Toggle history	
+34
+Toggle history	
+47
+Toggle history	
+9.1
+Toggle history	
+46
+Toggle history	
+34
+Toggle history	
+33
+Toggle history	
+9.3
+Toggle history	
+5.0
+Toggle history	
+46
+Toggle history	
+1.0
+Toggle history	
+4.0.0
+Toggle history
+Legend
+Tip: you can click/tap on a cell for more information.
+
+Full support
+Full support

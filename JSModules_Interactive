@@ -1,0 +1,1 @@
+https://darrenderidder.github.io/talks/ModulePatterns/#/

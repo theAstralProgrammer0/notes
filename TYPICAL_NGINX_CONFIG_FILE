@@ -1,0 +1,83 @@
+Note:	
+The file `/etc/nginx/sites-available/example.com` typically contains the configuration for a specific website 
+(in this case, example.com) hosted on an Nginx web server. 
+
+
+=> `/etc/nginx/sites-available/example.com` file:
+
+	Here's an example of what a typical `/etc/nginx/sites-available/example.com` file might look like, along with 
+	identification of the configurations and blocks contained:
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	server {
+		listen 80;
+		listen [::]:80;
+		
+		root /var/www/example.com/html;
+		
+		index index.html index.htm index.nginx-debian.html;
+		
+		server_name example.com www.example.com;
+		
+		location / {
+			
+			try_files $uri $uri/ =404;
+		}
+	}
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+=> Server Block Configuration:
+
+	This block encapsulates the configuration for the example.com server block.
+
++++++++++++++++++++++++++++	
+	server {
+		...
+	}
++++++++++++++++++++++++++++
+
+=> Listen Directives:
+
+	These directives specify that Nginx should listen on port 80 for both IPv4 and IPv6 connections.
+
++++++++++++++++++++++++++++	
+	listen 80;
+	listen [::]:80;
++++++++++++++++++++++++++++
+
+=> Root Directive:
+	
+	This directive sets the root directory where the website's files are located (/var/www/example.com/html).
+
++++++++++++++++++++++++++++++++++++++++++++++++
+	root /var/www/example.com/html;
++++++++++++++++++++++++++++++++++++++++++++++++
+
+=> Index Directive:
+
+	This directive defines the default files to serve when a directory is requested.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	index index.html index.htm index.nginx-debian.html;
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+=> Server Name Directive:
+
+	This directive specifies the domain names for which this server block should 
+	respond (example.com and www.example.com).
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++				
+	server_name example.com www.example.com;
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++				
+
+=> Location Blocks:
+	
+	This block defines how Nginx should handle requests for any location within the example.com domain.
+	The try_files directive instructs Nginx to attempt to serve requested files, and if they don't exist,
+	return a 404 error.
+	
+++++++++++++++++++++++++++++++++++++++++++++++++++
+	location / {
+		try_files $uri $uri/ =404;
+	}
+++++++++++++++++++++++++++++++++++++++++++++++++++

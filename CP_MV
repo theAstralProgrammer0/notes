@@ -1,0 +1,26 @@
+You can use the brace expansion feature `{,.}` in combination with the `mv` or
+`cp` command to copy a file and change its extension in the same line. Here's
+how you can do it:
+
+```bash
+mv /path/to/source/file.{old_extension,new_extension}
+```
+
+or
+
+```bash
+cp /path/to/source/file.{old_extension,new_extension}
+```
+
+Replace `/path/to/source/file` with the path to the source file you want to
+copy, `old_extension` with the current extension of the file, and
+`new_extension` with the desired extension you want to change to.
+
+For example, if you have a file named `example.txt` and you want to copy it and
+change its extension to `.bak`, you can use:
+
+```bash
+cp /path/to/example.txt{,.bak}
+```
+
+This will copy `example.txt` to `example.txt.bak` in the same directory.

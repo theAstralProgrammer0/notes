@@ -1,0 +1,4 @@
+Yesterday I learned how to use the curl command for making HTTP networking seamless. Other ways like telnet exist, but its marginally insecure due to password authentication which can be sniffed out. With ssh and curl, I can probe a url for its resources and get information contained in the HTTP response headers and body. Now, that's cool! 
+
+Today, I learned how to use the urllib module in python to make various requests to a url and how to parse the data returned. I can use urllib.request.Request() to create a standard request class which grants me access to the methods it has such as .read(), .decode('utf-8'), etc.
+I also took my first steps into the world of network adminstration and ethical hacking by learning about industry tools like sniffers, snorters, spoofers and alike. I had to update my system's source list to download the latest release of WireShark as a Linux 3rd party package (ppa).

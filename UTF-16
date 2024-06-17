@@ -1,0 +1,32 @@
+UTF-16 characters, Unicode code points, and grapheme clusters
+Strings are represented fundamentally as sequences of UTF-16 code units. In UTF-16 encoding, every code unit is exact 16 bits long. This means there are a maximum of 216, or 65536 possible characters representable as single UTF-16 code units. This character set is called the basic multilingual plane (BMP), and includes the most common characters like the Latin, Greek, Cyrillic alphabets, as well as many East Asian characters. Each code unit can be written in a string with \u followed by exactly four hex digits.
+
+However, the entire Unicode character set is much, much bigger than 65536. The extra characters are stored in UTF-16 as surrogate pairs, which are pairs of 16-bit code units that represent a single character. To avoid ambiguity, the two parts of the pair must be between 0xD800 and 0xDFFF, and these code units are not used to encode single-code-unit characters. (More precisely, leading surrogates, also called high-surrogate code units, have values between 0xD800 and 0xDBFF, inclusive, while trailing surrogates, also called low-surrogate code units, have values between 0xDC00 and 0xDFFF, inclusive.) Each Unicode character, comprised of one or two UTF-16 code units, is also called a Unicode code point. Each Unicode code point can be written in a string with \u{xxxxxx} where xxxxxx represents 1–6 hex digits.
+
+A "lone surrogate" is a 16-bit code unit satisfying one of the descriptions below:
+
+It is in the range 0xD800–0xDBFF, inclusive (i.e. is a leading surrogate), but it is the last code unit in the string, or the next code unit is not a trailing surrogate.
+It is in the range 0xDC00–0xDFFF, inclusive (i.e. is a trailing surrogate), but it is the first code unit in the string, or the previous code unit is not a leading surrogate.
+Lone surrogates do not represent any Unicode character. Although most JavaScript built-in methods handle them correctly because they all work based on UTF-16 code units, lone surrogates are often not valid values when interacting with other systems — for example, encodeURI() will throw a URIError for lone surrogates, because URI encoding uses UTF-8 encoding, which does not have any encoding for lone surrogates. Strings not containing any lone surrogates are called well-formed strings, and are safe to be used with functions that do not deal with UTF-16 (such as encodeURI() or TextEncoder). You can check if a string is well-formed with the isWellFormed() method, or sanitize lone surrogates with the toWellFormed() method.
+
+On top of Unicode characters, there are certain sequences of Unicode characters that should be treated as one visual unit, known as a grapheme cluster. The most common case is emojis: many emojis that have a range of variations are actually formed by multiple emojis, usually joined by the <ZWJ> (U+200D) character.
+
+You must be careful which level of characters you are iterating on. For example, split("") will split by UTF-16 code units and will separate surrogate pairs. String indexes also refer to the index of each UTF-16 code unit. On the other hand, @@iterator() iterates by Unicode code points. Iterating through grapheme clusters will require some custom code.
+
+JS
+Copy to Clipboard
+"😄".split(""); // ['\ud83d', '\ude04']; splits into two lone surrogates
+
+// "Backhand Index Pointing Right: Dark Skin Tone"
+[..."👉🏿"]; // ['👉', '🏿']
+// splits into the basic "Backhand Index Pointing Right" emoji and
+// the "Dark skin tone" emoji
+
+// "Family: Man, Boy"
+[..."👨‍👦"]; // [ '👨', '‍', '👦' ]
+// splits into the "Man" and "Boy" emoji, joined by a ZWJ
+
+// The United Nations flag
+[..."🇺🇳"]; // [ '🇺', '🇳' ]
+// splits into two "region indicator" letters "U" and "N".
+// All flag emojis are formed by joining two region indicator letters

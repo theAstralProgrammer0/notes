@@ -1,0 +1,102 @@
+Before starting to configure your ubuntu server, you should ensure you have a non-root user with sudo privileges set up on your Ubuntu server.
+If not, follow the initial server setup guide provided:
+
+- Initial Server Setup Guide:
+	+ Step 1 — Root Login:
+
+		ssh root@<your_server_ip>
+
+	+ Step 2 — Create a New User:
+
+		adduser <username>
+
+	+ Step 3 — Root Privileges:
+
+		usermod -aG sudo <username>
+
+	+ Step 4 — Add Public Key Authentication (Recommended):
+
+		ssh-keygen
+
+		ssh-keygen output
+		Generating public/private rsa key pair.
+		Enter file in which to save the key (/Users/localuser/.ssh/id_rsa): </path/to/file/where/private/key/is/stored>
+	
+	+ Step 5 - Copy the Public Key (Follow Up):
+
+		Option 1 - Using `ssh-copy-id` (Not recommended):
+
+			ssh-copy-id <username>@<your_server_ip>
+			
+			NB:	The ssh-copy-id method will not work on DigitalOcean if an SSH key was selected during Droplet creation.
+				This is because DigitalOcean disables password authentication if an SSH key is present, and the 
+				ssh-copy-id relies on password authentication to copy the key.
+				If you are using DigitalOcean and selected an SSH key during Droplet creation, use option 2 instead.
+				After providing your password at the prompt, your public key will be added to the remote user’s 
+				.ssh/authorized_keys file.The corresponding private key can now be used to log into the server with:
+
+					ssh -i </path/to/private/key> <username>@<your_server_ip>
+
+		Option 2 - Manually Install the Key (Recommended):
+
+			cat </path/to/public_key/file> | clip
+
+			su - <username>
+
+			mkdir ~/.ssh
+			
+			chmod 700 ~/.ssh
+
+			vim ~/.ssh/authorized_keys && Write and Save the public key copied into the file
+
+			chmod 600 ~/.ssh/authorized_keys
+
+			exit
+
+	+ Step 6 — Disable Password Authentication (Recommended):
+
+		Note:	Only disable password authentication if you installed a public key to your user as recommended in the previous section,
+			step 5. Otherwise, you will lock yourself out of your server!
+
+			sudo vim /etc/ssh/sshd_config
+			
+			Write these to the file and save:
+
+				PasswordAuthentication no
+				PubkeyAuthentication yes
+				ChallengeResponseAuthentication no
+
+			sudo systemctl reload sshd
+
+	+ Step 7 — Test Log In:
+
+		ssh <username>@<your_server_ip>
+
+		Note about key authentication: 
+			If you created your key pair with a passphrase, you will be prompted to enter the passphrase for your key. 
+			Otherwise, if your key pair is passphrase-less, you should be logged in to your server without a password.
+
+		sudo <command_to_run>
+
+	+ Step 8 — Set Up a Basic Firewall:
+
+		Note about UFW (Ubuntu FireWall):
+			Ubuntu 16.04 servers can use the UFW firewall to make sure only connections to certain services are allowed.
+			We can set up a basic firewall very easily using this application.
+			Different applications can register their profiles with UFW upon installation. 
+			These profiles allow UFW to manage these applications by name. 
+			OpenSSH, the service allowing us to connect to our server now, has a profile registered with UFW.
+			You can see this by typing:
+
+				sudo ufw app list
+
+				sudo ufw allow OpenSSH
+					makes sure that the firewall allows SSH connections so that we can log back in next time.
+
+				sudo ufw enable
+					starts the ufw service
+
+				Note:
+					If you install and configure additional services, you will need to adjust the firewall settings
+					to allow acceptable traffic in.
+					You can learn some common UFW operations in the UFW guide.

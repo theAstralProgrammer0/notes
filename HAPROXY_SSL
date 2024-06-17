@@ -1,0 +1,45 @@
+When creating an SSL certificate for HAProxy load balancer SSL termination, the
+containing folder where the SSL certificate files reside can be on the server
+filesystem or on a local filesystem, depending on your setup and requirements.
+
+If you're generating the SSL certificate directly on the server where HAProxy
+is running, you can choose to store the SSL certificate files in a directory on
+the server filesystem.
+
+Alternatively, if you generate the SSL certificate on a separate machine or
+environment, you can transfer the certificate files to the server where HAProxy
+is running and store them in a directory on the server filesystem.
+
+Once the SSL certificate files are in the designated directory on the server,
+     HAProxy can access them for SSL termination. HAProxy typically requires
+     two main SSL certificate files:
+
+1. **Certificate file (.crt)**: This file contains the SSL certificate issued by the Certificate Authority (CA).
+2. **Private key file (.key)**: This file contains the private key associated with the SSL certificate.
+
+To configure HAProxy for SSL termination, you typically specify the paths to
+these certificate files in the HAProxy configuration file. Here's an example of
+how you might configure HAProxy to perform SSL termination using the
+certificate files stored in a specific directory:
+
+```bash
+frontend my_frontend
+    bind *:443 ssl crt /path/to/certificate/directory/certificate.crt
+    # Specify the private key file
+    # bind *:443 ssl crt /path/to/certificate/directory/certificate.pem
+    # Alternatively, you can combine the certificate and private key into a single file:
+    # bind *:443 ssl crt /path/to/certificate/directory/certificate.pem
+    # Specify other frontend configurations as needed
+```
+
+In this configuration:
+
+- `bind *:443` binds HAProxy to port 443 for HTTPS traffic.
+- `ssl` indicates that SSL/TLS termination is enabled.
+- `crt /path/to/certificate/directory/certificate.crt` specifies the path to the SSL certificate file.
+
+You can also specify additional options and configurations in the HAProxy
+frontend to customize SSL termination behavior, such as enabling SSL
+offloading, configuring SSL cipher suites, enabling HSTS, and more, depending
+on your requirements and security best practices.
+-------------------------------------------------------------------------------------------------------------------------

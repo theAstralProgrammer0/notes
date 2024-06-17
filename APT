@@ -1,0 +1,30 @@
+To check the list of installed packages on your Linux system, you can use
+package management commands such as `dpkg` or `apt` on Debian-based systems
+like Ubuntu. Here's how you can do it:
+
+1. Using `dpkg`:
+   ```bash
+   dpkg --get-selections
+   ```
+
+2. Using `apt`:
+   ```bash
+   apt list --installed
+   ```
+
+To check the list of available packages that can be installed, you can use the
+following command:
+
+```bash
+apt list
+```
+
+This command will list all available packages along with their versions. You
+can also use `apt-cache` to search for specific packages:
+
+```bash
+apt-cache search <package_name>
+```
+
+Replace `<package_name>` with the name or keyword of the package you're looking
+for. This will display a list of packages matching the search criteria.

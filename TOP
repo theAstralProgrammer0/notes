@@ -1,0 +1,81 @@
+%Cpu(s):  0.1 us,  0.2 sy,  0.0 ni, 99.7 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+		  
+	This section of the `top` feedback output provides information about CPU usage. Here's a breakdown of each component:
+
+	- `%Cpu(s)`: This indicates the percentage of CPU time spent in various states.
+
+	- `0.1 us`: This represents the percentage of CPU time spent by user-level processes.
+
+	- `0.2 sy`: This indicates the percentage of CPU time spent by system-level processes.
+
+	- `0.0 ni`: This shows the percentage of CPU time spent by processes with a positive nice value, which are user tasks that have been niced (i.e., their priority has been lowered).
+
+	- `99.7 id`: This represents the percentage of CPU time spent idle, meaning the CPU is not executing any tasks.
+
+	- `0.0 wa`: This indicates the percentage of CPU time spent waiting for I/O operations to complete.
+
+	- `0.0 hi`: This shows the percentage of CPU time spent handling hardware interrupts.
+
+	- `0.0 si`: This represents the percentage of CPU time spent handling software interrupts.
+
+	- `0.0 st`: This indicates the percentage of CPU time stolen from a virtual machine by the hypervisor. This is relevant in virtualized environments.
+
+	In summary, this section provides a snapshot of how the CPU is being utilized across different types of tasks and operations.
+	
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+The Help section provides a detailed explanation of the commands and shortcuts available in the `top` command's interactive mode. Here's a breakdown of each part:
+
+- **Window 1**: Indicates the current window settings and modes.
+  - **Def**: Default settings.
+  - **System**: System-related settings.
+
+- **Global Commands**:
+  - **Z, B, E, e**: Global settings for colors, bold, and memory scale.
+  - **l, t, m**: Toggle summary information for load average, task/CPU stats, and memory info.
+  - **0, 1, 2, 3, I**: Toggle display options such as zeros, CPU views, and Irix mode.
+  - **f, F, X**: Manipulate field display, sorting, and fixed-width.
+
+- **Locate and Move Commands**:
+  - **L, &, <, >**: Locate and move sort column.
+
+- **Toggle Commands**:
+  - **R, H, J, C**: Toggle sorting, threads, num justify, and coordinates.
+  - **c, i, S, j**: Toggle command name/line, idle, time, and string justify.
+  - **x, y**: Toggle highlights for sort field and running tasks.
+  - **z, b**: Toggle color/mono and bold/reverse.
+  - **u, U, o, O**: Filter tasks by user and other criteria.
+  - **n, #, ^O**: Set max tasks displayed and show other filters.
+  - **V, v**: Toggle forest view and show/hide children.
+
+- **Manipulate Tasks**:
+  - **k, r**: Kill and renice tasks.
+  - **d or s**: Set update interval.
+  - **W, Y**: Write configuration file and inspect other output.
+  - **q**: Quit.
+
+The commands shown with a '.' require a visible task display window.
+
+This help section provides users with a comprehensive guide to navigating and interacting with the `top` command's interface effectively.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+These sections provide information about memory usage on a system:
+
+1. **EiB Mem**:
+   - **0.0 total**: Total physical memory available on the system, measured in exbibytes (EiB).
+		    An exbibyte is a unit of digital information storage equivalent to 2^60 bytes.
+   - **0.0 free**: Amount of free memory in exbibytes.
+   - **0.0 used**: Amount of memory in use, including both actively used memory and memory used for buffers/cache.
+   - **0.0 buff/cache**: Amount of memory used for buffer/cache, which can be reclaimed if needed by applications.
+
+2. **EiB Swap**:
+   - **0.0 total**: Total swap space available on the system, measured in exbibytes.
+   - **0.0 free**: Amount of free swap space in exbibytes.
+   - **0.0 used**: Amount of swap space in use.
+   - **0.0 avail Mem**: Available memory for allocation by programs, calculated based on total memory and memory currently used for buffers/cache.
+
+These sections provide a summary of the system's memory usage, including physical memory (RAM) and swap space.
+The values are presented in exbibytes, a unit of digital information storage commonly used in computing.
+
+
+

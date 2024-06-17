@@ -1,0 +1,137 @@
+-- To symlink a file/directory to a file/directory in Linux, you can use the ln command with the -s option.
+   Here's the syntax:
+
+	->	ln -s /path/to/source /path/to/destination
+
+	Where:
+		/path/to/source:
+			Specifies the file you want to symlink.
+		/path/to/destination:
+			Specifies the directory where you want to create the symlink.
+
+	For example, if you want to symlink a file named example.txt to a directory /var/www/html, you would use:
+
+	->	ln -s /path/to/example.txt /var/www/html/
+		
+		This command creates a symbolic link named example.txt in the /var/www/html directory, 
+		pointing to the original file located at /path/to/example.txt.
+
+-- What's the significance of doing this?
+	Creating symbolic links allows you to reference files or directories from multiple locations without duplicating the actual content.
+	This can be useful for various purposes, such as:
+
+	+ Organizing files:
+		Symbolic links can help organize files by grouping related content together without physically moving them.
+
+	+ Simplifying access:
+		By creating symbolic links in common directories, you can access important files or directories 
+		from different locations in your file system without needing to remember their exact paths.
+
+	+ Updating content:
+		If the original file is updated, the changes are reflected in all symbolic links pointing to it,
+		ensuring consistency across different locations.
+
+	+ Saving disk space:
+		Symbolic links consume minimal disk space because they only store the path to the original file, rather than duplicating its contents.
+	
+	In the context of the nginx server configuration, creating symbolic links from the `sites-available` directory to the `sites-enabled` directory 
+	allows you to easily enable or disable specific server configurations without physically moving or copying the configuration files.
+	This modular approach simplifies server management and configuration, especially when dealing with multiple virtual hosts or websites.
+
+-- Typical Use Case Scenario:
+	Let's say you're managing a web server that hosts multiple websites or web applications. 
+	Each site has its own configuration file stored in the `sites-available` directory. 
+	Here's how symbolic links help in this scenario:
+
+	+ Enabling a New Website:
+		When you want to add a new website, you create its configuration file in the `sites-available` directory.
+		Let's call it `example.com`. After configuring the site, you enable it by creating a symbolic link from (src) `sites-available/example.com`
+	       	to (dest) `sites-enabled/example.com`.
+
+			-> ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/example.com
+
+		Now, Nginx will include `example.com` in its server block configurations and start serving traffic for that website.
+		
+		Note:	
+			The file `/etc/nginx/sites-available/example.com` typically contains the configuration for a specific website 
+			(in this case, example.com) hosted on an Nginx web server. See TYPICAL_NGNIX_CONFIG_FILE.
+				
+			+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+				server {
+					listen 80;
+					listen [::]:80;
+					
+					root /var/www/example.com/html;
+					
+					index index.html index.htm index.nginx-debian.html;
+					
+					server_name example.com www.example.com;
+					
+					location / {
+						
+						try_files $uri $uri/ =404;
+					}
+				}
+			+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+			=> Server Block Configuration:
+
+				This block encapsulates the configuration for the example.com server block.
+
+			+++++++++++++++++++++++++++	
+				server {
+				    	...
+				}
+			+++++++++++++++++++++++++++
+
+			=> Listen Directives:
+
+				These directives specify that Nginx should listen on port 80 for both IPv4 and IPv6 connections.
+
+			+++++++++++++++++++++++++++	
+				listen 80;
+				listen [::]:80;
+			+++++++++++++++++++++++++++
+
+			=> Root Directive:
+				
+				This directive sets the root directory where the website's files are located (/var/www/example.com/html).
+			
+			+++++++++++++++++++++++++++++++++++++++++++++++
+				root /var/www/example.com/html;
+			+++++++++++++++++++++++++++++++++++++++++++++++
+
+			=> Index Directive:
+			
+				This directive defines the default files to serve when a directory is requested.
+
+			+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+				index index.html index.htm index.nginx-debian.html;
+			+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+			=> Server Name Directive:
+
+				This directive specifies the domain names for which this server block should 
+				respond (example.com and www.example.com).
+
+			++++++++++++++++++++++++++++++++++++++++++++++++++++++++				
+				server_name example.com www.example.com;
+			++++++++++++++++++++++++++++++++++++++++++++++++++++++++				
+
+			=> Location Blocks:
+				
+				This block defines how Nginx should handle requests for any location within the example.com domain.
+				The try_files directive instructs Nginx to attempt to serve requested files, and if they don't exist,
+				return a 404 error.
+				
+			++++++++++++++++++++++++++++++++++++++++++++++++++
+				location / {
+					try_files $uri $uri/ =404;
+				}
+			++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+

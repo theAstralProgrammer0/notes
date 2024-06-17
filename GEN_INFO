@@ -1,0 +1,12 @@
+`/dev/sdc`
+	This is a block device typically representing a physical disk or a partition on a disk in Linux systems.
+	When you see `/dev/sdc` in the output of `df` (disk free), it means that there is a filesystem mounted on that device or partition.
+	If `df` is showing a filesystem with a size of 1007GB on `/dev/sdc`, 
+	it indicates that there is a storage device connected to your system with a capacity of 1007GB,
+	and it has been mounted or is being recognized by your system.
+	This device could be a separate hard disk, a USB drive, or some other type of storage device.
+	The fact that it shows more capacity than your internal solid-state drive (SSD) suggests that `/dev/sdc` may be an external storage device,
+	or it could be a partition on your internal drive that is not being used by your operating system.
+	You can use tools like `lsblk` or `fdisk -l` to get more detailed information about your storage devices and their partitions.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------

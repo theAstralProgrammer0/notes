@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+url1="web-01.tdaisioso.tech"
+url2="web-02.tdaisioso.tech"
+urll="lb-01.tdaisioso.tech"
+
+case "$1" in
+    1)
+        sudo dig +short "$url1"
+        ;;
+    2)
+        sudo dig +short "$url2"
+        ;;
+    l)
+        sudo dig +short "$urll"
+        ;;
+    *)
+        echo "Usage: ipcheck [1 | 2 | l]"
+        ;;
+esac

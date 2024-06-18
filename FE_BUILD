@@ -1,0 +1,44 @@
+Technologies:
+- React
+- React Router
+- React Hot Toast
+- Redux
+- Axios
+- Tailwind css
+
+0. You must Explain every ascpect of the code you will provide from now henceforth and
+   apply best practices and show pitfalls that must be avoided. For every
+   best practice used, you must explain the steps required to achieve it in details.
+   You must also explain the steps and processes behind the use of each
+   technology and dependency tool utilised in the creation of the application.
+
+1. You must Build a React Front End Application using the technologies listed above.
+   As for the remaining technologies and dependencies you will use to build it, you must Select 
+   the most efficient and hassle-free tools for the job, explain why they have been selected 
+   and of course, the steps to take to setup and use each tool prescribed by you. 
+
+2. The UI/UX figma design for the app has been attached. The application must
+   be built AS IS shown in the attached design. You may suggest other
+   color combinations that matches the theme of the UI, but write the code in comments
+   only as comments.
+
+3. You must explain every part of the codes you will generate using comments.
+
+4. You must show the file-folder structure of the application as a diagram.
+
+5. You must write beautiful API requests to the backend using axios and ensure
+   you handle all errors gracefully.
+
+6. The Entity Relationship map for the backend has also been attached. You must
+   explain and generate tests for querying the backend using axios, and all
+   other aspects of the application built. The backend
+   framework is a Django application, and the database used is MySQL. Don't
+   provide any unnecessary python or SQL code,
+   only provide the code for the front-end and for necessary python or SQL code (if any).
+
+7. After building the landing page which is in the UI/UX design attached, you
+   must build an individual destination page for all the links present in the
+   design of the landing page using React Router. You must use the same color
+   theme and typography to ensure a consistent UI. You must decide the best
+   layout for the rest of the pages, but the landing page stays the same as
+   done in the design.

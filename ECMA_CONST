@@ -1,0 +1,65 @@
+In JavaScript, the `const` keyword is used to declare a constant variable,
+   meaning that once a value is assigned to this variable, it cannot be
+   changed. This is different from `let` variables, which can have their values
+   reassigned after their initial declaration.
+
+Here are a few examples to illustrate this:
+
+### Example 1: Declaring and Using a Constant
+
+```javascript
+const PI = 3.14159;
+console.log(PI); // Output: 3.14159
+```
+
+In this example, `PI` is declared as a constant with the value `3.14159`.
+Trying to change the value of `PI` will result in an error.
+
+### Example 2: Attempting to Reassign a Constant
+
+```javascript
+const PI = 3.14159;
+PI = 3.14; // This will cause an error
+```
+
+Here, we try to reassign the value of `PI` to `3.14`, but this will throw an
+error because `PI` is a constant and its value cannot be changed.
+
+### Example 3: Constants with Objects
+
+Constants can also be used with objects. While you cannot reassign the object
+itself, you can still change its properties.
+
+```javascript
+const person = {
+  name: 'John',
+  age: 30
+};
+
+// You can change the properties of the object
+person.age = 31;
+console.log(person.age); // Output: 31
+
+// But you cannot reassign the object itself
+person = { name: 'Jane', age: 25 }; // This will cause an error
+```
+
+In this example, the `person` object is declared as a constant. While we can
+modify its `age` property, attempting to reassign the `person` variable to a
+new object will result in an error.
+
+### Example 4: Constants in Loops
+
+You can use `const` within a loop, but the scope of the constant is limited to
+that loop iteration.
+
+```javascript
+for (let i = 0; i < 3; i++) {
+  const message = 'Iteration ' + i;
+  console.log(message);
+}
+```
+
+In this example, the `message` constant is declared within the loop, and a new
+`message` is created for each iteration. Each `message` is scoped to its
+specific iteration of the loop.

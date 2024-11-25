@@ -1,0 +1,48 @@
+
+-------------------------------------------------------------------------------
+
+How to clear your push cache when you accidentally push something that's too
+large or another faulty file.
+
+0. To see which files are being tracked in the Git index (which might be staged
+   for commit or pushed), you can use:
+                                        
+                git ls-files -s
+
+1. You can use git filter-repo to remove a file from the history. Install git
+   filter-repo if you haven't already:
+
+                pip install git-filter-repo
+
+   Then, use it to remove the file from your history:
+
+                git filter-repo --path <path/to/large-file> --invert-paths
+
+2. To clear the Git cache for a specific file:
+                
+                git rm --cached <path/to/large-file>
+
+3. If you want to clear all cached files:
+
+                git rm -r --cached .
+
+4. After removing the file from the cache and history, commit the changes:
+
+                git commit -m "Remove large file from history and cache"
+                git push origin <branch-name> --force
+
+5. Verify that the large file has been removed from your repository's history:
+
+                git log --stat
+
+6. Also, consider adding the large file to .gitignore to prevent it from being
+   added again: 
+
+                echo "<path/to/large-file>" >> .gitignore
+                git add .gitignore
+                git commit -m "Add large file to .gitignore"
+                git push origin <branch-name>
+
+----------------------------------------------------------------------------------
+
+

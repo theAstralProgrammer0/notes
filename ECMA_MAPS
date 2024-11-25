@@ -1,0 +1,137 @@
+JavaScript `Map` and `Array` are both used to store collections of data, but
+they have different purposes and features. Let's break down the differences and
+provide examples to illustrate them.
+
+### JavaScript Maps
+
+A `Map` in JavaScript is a collection of key-value pairs. Unlike objects, `Map`
+keys can be of any type, including objects, functions, and primitive types. One
+of the important features of a `Map` is that it maintains the order of the
+entries, which means that when you iterate over a `Map`, the entries are
+returned in the order they were added.
+
+**Example:**
+
+```javascript
+const fruits = new Map([
+  ["apples", 500],
+  ["bananas", 300],
+  ["oranges", 200]
+]);
+
+// Adding a new key-value pair
+fruits.set("grapes", 400);
+
+// Getting the value associated with a key
+console.log(fruits.get("apples")); // 500
+
+// Checking if a key exists
+console.log(fruits.has("bananas")); // true
+
+// Removing a key-value pair
+fruits.delete("oranges");
+
+// Iterating over the Map
+fruits.forEach((value, key) => {
+  console.log(key + ": " + value);
+});
+// Output:
+// apples: 500
+// bananas: 300
+// grapes: 400
+```
+
+### JavaScript Arrays
+
+An `Array` in JavaScript is a list-like object used to store multiple values in
+a single variable. Arrays use zero-based indexing to access elements. Arrays
+are mainly used for ordered collections of items and provide various methods
+for operations like adding, removing, or iterating over elements.
+
+**Example:**
+
+```javascript
+const fruits = ["apples", "bananas", "oranges"];
+
+// Adding a new element
+fruits.push("grapes");
+
+// Getting an element by index
+console.log(fruits[0]); // apples
+
+// Checking if an element exists
+console.log(fruits.includes("bananas")); // true
+
+// Removing the last element
+fruits.pop();
+
+// Iterating over the Array
+fruits.forEach(fruit => {
+  console.log(fruit);
+});
+// Output:
+// apples
+// bananas
+// oranges
+```
+
+### Differences Between a Map and an Array
+
+1. **Data Structure:**
+   - `Map` stores key-value pairs.
+   - `Array` stores a list of values.
+
+2. **Key Types:**
+   - In a `Map`, keys can be of any type (objects, functions, primitives).
+   - In an `Array`, the keys (indexes) are integers starting from 0.
+
+3. **Order:**
+   - `Map` maintains the order of entries as they were added.
+   - `Array` maintains the order of elements as they were added.
+
+4. **Use Cases:**
+   - Use a `Map` when you need to associate keys with values and need the keys
+     to be of any type.
+   - Use an `Array` when you need an ordered list of items.
+
+5. **Methods:**
+   - `Map` provides methods like `set`, `get`, `has`, `delete`, `forEach`.
+   - `Array` provides methods like `push`, `pop`, `shift`, `unshift`,
+     `forEach`, `map`, `filter`.
+
+### Example Comparison
+
+**Using a Map:**
+
+```javascript
+const mapExample = new Map([
+  ["name", "John"],
+  ["age", 30],
+  [{ id: 1 }, "object as a key"]
+]);
+
+mapExample.forEach((value, key) => {
+  console.log(key + ": " + value);
+});
+// Output:
+// name: John
+// age: 30
+// [object Object]: object as a key
+```
+
+**Using an Array:**
+
+```javascript
+const arrayExample = ["John", 30, { id: 1 }];
+
+arrayExample.forEach((item, index) => {
+  console.log(index + ": " + item);
+});
+// Output:
+// 0: John
+// 1: 30
+// 2: [object Object]
+```
+
+In summary, choose a `Map` when you need a collection of key-value pairs with
+any type of keys, and an `Array` when you need an ordered list of items.

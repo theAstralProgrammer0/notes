@@ -1,3 +1,34 @@
 #!/usr/bin/env bash
 
-sudo lsof -t -i :"$1" 
+# Check if exactly one argument is provided
+if [[ $# -ne 1 ]]; then
+  echo "Usage: $0 <port_number>"
+  echo "This script displays processes using the specified TCP port number."
+  exit 1
+fi
+
+# Check if the argument is a number
+if [[ ! $1 =~ ^[0-9]+$ ]]; then
+  echo "Error: Please provide a valid port number as an argument."
+  exit 1
+fi
+
+# Check if sudo is available (optional, adjust based on your needs)
+if ! command -v sudo &> /dev/null; then
+  echo "Error: 'sudo' command not found. This script requires sudo privileges."
+  exit 1
+fi
+
+# Execute lsof command with sudo (adjust quoting if necessary)
+processes=$(sudo lsof -t -i :"$1")
+
+# Check if any processes were found
+if [[ -z "$processes" ]]; then
+  echo "No processes found using TCP port $1."
+else
+  echo "Processes using TCP port $1:"
+  echo "$processes"
+fi
+
+exit 0
+

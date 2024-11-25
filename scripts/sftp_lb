@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo sftp -i ~/.ssh/web_01 $(ipcheck l)

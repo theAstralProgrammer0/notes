@@ -23,6 +23,7 @@ msg.sender -> Represents the address of the user or contract that called the fun
 msg.value -> Represents the Ether sent along with a transaction.
 address -> Represents an Ethereum address.
 uint -> An unsigned integer (non-negative numbers).
+returns -> Used in function decalaration for specifying return type(s) of that function.
 
 Real-Life Case Study: Crowdfunding Contract
 Here’s how we can apply these keywords to build a crowdfunding platform.

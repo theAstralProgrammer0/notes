@@ -1,0 +1,166 @@
+Map Object and map() Function in ES6
+
+The Map object and the map() function in ES6 are both important and frequently
+used in JavaScript development. While they may sound similar, they serve
+different purposes and are used in different contexts. Here's a detailed
+explanation of each, their differences, use cases, and examples:
+
+Map Object
+The Map object in ES6 is a built-in JavaScript object that allows you to store
+key-value pairs. It is similar to an object but offers some advantages:
+
+1. Preserves the order of entries: Unlike regular objects, Maps preserve the
+                                   insertion order of keys.
+2. Any type of key: Maps allow keys of any type, including objects, functions, and
+                    primitives.
+3. Size property: Maps have a size property that gives the number of key-value
+                  pairs.
+4. Enhanced methods: Maps provide methods like set(), get(), delete(), has(), and
+                     clear() for managing entries.
+
+Usage example:
+// Creating a new Map
+const map = new Map();
+
+// Adding entries
+map.set('name', 'John Doe');
+map.set(1, 'Number one');
+map.set(true, 'Boolean value');
+
+// Accessing values
+console.log(map.get('name')); // John Doe
+console.log(map.get(1)); // Number one
+
+// Checking for existence
+console.log(map.has(true)); // true
+
+// Getting the size of the Map
+console.log(map.size); // 3
+
+// Iterating over a Map
+for (const [key, value] of map) {
+  console.log(`${key}: ${value}`);
+}
+
+// Deleting an entry
+map.delete(1);
+console.log(map.size); // 2
+
+// Clearing the Map
+map.clear();
+console.log(map.size); // 0
+
+
+map() Function
+The map() function is a built-in array method that creates a new array by
+applying a provided function to every element of the calling array. It is used
+for transforming arrays without mutating the original array.
+
+Syntax:
+General syntax of map() method is:
+```
+array.map(callback(currentValue), thisArg)
+```
+Parameters: map() method accepts two parameters:
+1. callback- This function is called on each element of array and returns value
+             which will be added in new array. It takes in 3 parameters:
+                -> currentValue : It is a required parameter and it holds the
+                                  value of the current element.
+                -> index : It is an optional parameter and it holds the index
+                           of the current element.
+                -> array : It is an optional parameter and it holds the array.
+
+2. thisArg (optional)- It is used to hold the value passed to the function. By
+                       default it is undefined.
+
+Return value: It returns a new array with elements as the return values from
+the callback function for each element.
+
+Notes:
+
+map() doen't change the original array.
+it executes callback for each array element in order
+it does not execute callback for elements without values.
+
+
+Usage example:
+// Array of numbers
+const numbers = [1, 2, 3, 4, 5];
+
+// Using map() to create a new array with squared values
+const squares = numbers.map(num => num * num);
+
+console.log(squares); // [1, 4, 9, 16, 25]
+
+// Original array remains unchanged
+console.log(numbers); // [1, 2, 3, 4, 5]
+
+Differences
+1. Purpose: The Map object is used to store and manage key-value pairs, while the
+            map() function is used to transform arrays.
+2. Data Structure: The Map object is a collection of key-value pairs. The map()
+                   function operates on arrays.
+3. Methods: Map has methods for managing entries (set(), get(), delete(),
+            etc.). The map() function is specifically for creating new arrays from
+            existing ones based on a transformation function.
+            
+Real-World Examples
+
+Map Object Example:
+In a real-world project, you might use a Map object to manage user sessions in
+a web application.
+
+Usage:
+const userSessions = new Map();
+
+// Adding user sessions
+userSessions.set('user1', { name: 'John Doe', loginTime: Date.now() });
+userSessions.set('user2', { name: 'Jane Smith', loginTime: Date.now() });
+
+// Accessing a user's session data
+console.log(userSessions.get('user1')); // { name: 'John Doe', loginTime: 1627643778379 }
+
+// Iterating over all user sessions
+for (const [user, session] of userSessions) {
+  console.log(`${user}: ${JSON.stringify(session)}`);
+}
+
+
+map() Function Example:
+In a real-world project, you might use the map() function to process data from
+an API response.
+
+Usage:
+const apiResponse = [
+  { id: 1, name: 'John Doe', age: 30 },
+  { id: 2, name: 'Jane Smith', age: 25 },
+];
+
+// Using map() to transform the response into a list of names
+const names = apiResponse.map(user => user.name);
+
+console.log(names); // ['John Doe', 'Jane Smith']
+
+
+When to Use Each
+
+1. Use Map Object:
+
+When you need to store key-value pairs with any type of key.
+When you need to preserve the order of entries.
+When you need efficient operations for adding, deleting, and checking the
+existence of entries.
+
+2.  Use map() Function:
+
+When you need to transform or process elements of an array.
+When you want to create a new array based on the results of a function applied
+to each element of an existing array.
+When you need to perform operations on each element of an array without
+mutating the original array.
+
+
+Understanding the differences and appropriate use cases for the Map object and
+the map() function helps in writing efficient and clean JavaScript code.
+
+

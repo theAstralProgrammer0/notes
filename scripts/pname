@@ -1,3 +1,29 @@
 #!/usr/bin/env bash
 
-ps -p $1 -o comm=
+# Check if exactly one argument is provided
+if [[ $# -ne 1 ]]; then
+  echo "Usage: $0 <process_id>"
+  echo "This script displays the command name of a running process by its PID."
+  exit 1
+fi
+
+# Check if the argument is a number
+if [[ ! $1 =~ ^[0-9]+$ ]]; then
+  echo "Error: Please provide a valid process ID (PID) as an argument."
+  exit 1
+fi
+
+# Get the process command name using ps
+process_name=$(ps -p "$1" -o comm=)
+
+# Check if the process exists
+if [[ -z "$process_name" ]]; then
+  echo "Error: Process with PID $1 not found."
+  exit 1
+fi
+
+# Print the process command name
+echo "Process with PID $1 is: $process_name"
+
+exit 0
+

@@ -1,0 +1,109 @@
+Array destructuring is a feature in JavaScript that allows you to unpack values
+from arrays or properties from objects into distinct variables. This makes it
+easier and more concise to extract data from arrays and objects.
+
+### Array Destructuring
+
+With array destructuring, you can assign elements of an array to variables in a
+single line.
+
+#### Example 1: Basic Array Destructuring
+
+```javascript
+const colors = ['red', 'green', 'blue'];
+
+const [firstColor, secondColor, thirdColor] = colors;
+
+console.log(firstColor);  // Output: 'red'
+console.log(secondColor); // Output: 'green'
+console.log(thirdColor);  // Output: 'blue'
+```
+
+In this example, `firstColor` is assigned the value `'red'`, `secondColor` is
+assigned `'green'`, and `thirdColor` is assigned `'blue'` from the `colors`
+array.
+
+#### Example 2: Skipping Elements
+
+You can skip elements in the array by leaving a blank space between commas.
+
+```javascript
+const numbers = [1, 2, 3, 4];
+
+const [first, , third] = numbers;
+
+console.log(first);  // Output: 1
+console.log(third);  // Output: 3
+```
+
+Here, the second element (`2`) is skipped, so `first` gets `1` and `third` gets
+`3`.
+
+#### Example 3: Default Values
+
+You can also assign default values that will be used if the array does not have
+enough elements.
+
+```javascript
+const names = ['Alice'];
+
+const [firstName, lastName = 'Doe'] = names;
+
+console.log(firstName); // Output: 'Alice'
+console.log(lastName);  // Output: 'Doe'
+```
+
+In this case, `lastName` is assigned the default value `'Doe'` because the
+`names` array does not have a second element.
+
+### Object Destructuring
+
+Object destructuring works similarly to array destructuring but is used to
+unpack properties from objects.
+
+#### Example 4: Basic Object Destructuring
+
+```javascript
+const person = { name: 'John', age: 30 };
+
+const { name, age } = person;
+
+console.log(name); // Output: 'John'
+console.log(age);  // Output: 30
+```
+
+Here, `name` is assigned `'John'` and `age` is assigned `30` from the `person`
+object.
+
+#### Example 5: Renaming Variables
+
+You can rename the variables when destructuring.
+
+```javascript
+const user = { username: 'jdoe', email: 'jdoe@example.com' };
+
+const { username: user, email: emailAddress } = user;
+
+console.log(user);        // Output: 'jdoe'
+console.log(emailAddress); // Output: 'jdoe@example.com'
+```
+
+In this example, `username` is assigned to `user`, and `email` is assigned to
+`emailAddress`.
+
+#### Example 6: Default Values in Object Destructuring
+
+You can provide default values in case the property does not exist in the
+object.
+
+```javascript
+const config = { timeout: 500 };
+
+const { timeout, port = 3000 } = config;
+
+console.log(timeout); // Output: 500
+console.log(port);    // Output: 3000
+```
+
+Here, `port` is assigned the default value `3000` because the `config` object
+does not have a `port` property.

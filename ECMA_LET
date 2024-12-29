@@ -1,0 +1,54 @@
+In JavaScript, the `let` keyword is used to declare variables that are limited
+in scope to the block, statement, or expression in which they are used. This is
+different from the `var` keyword, which defines a variable globally or locally
+to an entire function regardless of block scope.
+
+### Examples:
+
+1. **Block Scope with `let`:**
+   ```javascript
+   if (true) {
+       let x = 10;
+       console.log(x); // 10
+   }
+   console.log(x); // ReferenceError: x is not defined
+   ```
+   In this example, `x` is declared within an `if` block using `let`. This
+   means `x` is only accessible within this block. Outside the block, `x` is
+   not defined, leading to a `ReferenceError`.
+
+2. **Block Scope with `var`:**
+   ```javascript
+   if (true) {
+       var y = 10;
+       console.log(y); // 10
+   }
+   console.log(y); // 10
+   ```
+   Here, `y` is declared with `var` inside an `if` block. Unlike `let`, `var`
+   does not have block scope, so `y` is accessible outside the block as well.
+
+3. **Loop Scope with `let`:**
+   ```javascript
+   for (let i = 0; i < 5; i++) {
+       console.log(i); // 0, 1, 2, 3, 4
+   }
+   console.log(i); // ReferenceError: i is not defined
+   ```
+   In this loop, `i` is declared using `let`, so it is scoped to the loop
+   block. Once the loop is finished, `i` is no longer accessible outside the
+   loop.
+
+4. **Loop Scope with `var`:**
+   ```javascript
+   for (var j = 0; j < 5; j++) {
+       console.log(j); // 0, 1, 2, 3, 4
+   }
+   console.log(j); // 5
+   ```
+   When using `var` to declare `j` in the loop, `j` remains accessible even
+   after the loop has finished executing.
+
+Using `let` helps prevent errors that can occur from variables being accessible
+outside of their intended scope, thus providing better control over variable
+visibility and life span.

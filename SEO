@@ -1,0 +1,80 @@
+Where do search engines live? What's the structure of it, and how does SSR
+bring about SEO? Where does SEO even take place?
+
+
+
+Where do search engines live?
+
+Search engines don't live in one specific place. They're vast networks of
+computers and data centers spread across the globe. For example, Google's
+search engine infrastructure involves millions of servers located in data
+centers around the world.   
+
+Structure of a search engine:
+
+A search engine's structure is complex and constantly evolving. Here's a
+simplified overview:   
+
+Web Crawler (Spider):
+
+Automatically browses the web, following links from page to page.   
+Discovers new web pages and updates existing ones in the search engine's index.
+  
+Index:
+
+A massive database that stores information about web pages, including:
+Page content (text, images, videos)   
+Page title and meta description
+Links to and from the page   
+Page loading speed and other technical factors   
+
+Search Bar and User Interface:
+
+Where users enter their search queries.
+Displays search results in a user-friendly format.
+
+Ranking Algorithms:
+
+Complex mathematical formulas that determine the order in which search results are displayed.   
+Consider hundreds of factors, including relevance, popularity, and user experience.
+
+How does SSR (Server-Side Rendering) bring about SEO?
+
+Server-Side Rendering (SSR) can significantly improve SEO by:
+
+Faster Page Loading: SSR renders web pages on the server before sending them to
+the browser, resulting in faster initial page loads, which is a crucial ranking
+factor.   
+Better Crawling and Indexing: Search engine crawlers can easily understand and
+index pre-rendered HTML, leading to better coverage of your website.   
+Improved User Experience: Faster loading times and a smooth initial experience
+can lead to lower bounce rates and longer session durations, which are also
+positive SEO signals.   
+
+Where does SEO take place?
+
+SEO happens across various aspects of your website and online presence:
+
+On-Page SEO: Optimizing elements directly within your website's HTML, such as:
+Title tags   
+Meta descriptions   
+Headings (H1, H2, etc.)
+Image alt text
+Page content (keyword relevance, readability, etc.)
+
+Off-Page SEO: Building external signals that indicate the quality and authority
+of your website, such as:
+Backlinks from other websites   
+Social media engagement   
+Brand mentions
+
+Technical SEO: Ensuring your website is technically sound and easy for search
+engines to crawl and index, including:
+Mobile-friendliness   
+Page speed
+Site architecture
+HTTPS security
+
+By understanding these aspects, you can implement effective SEO strategies to
+improve your website's visibility in search results and attract more organic
+traffic.

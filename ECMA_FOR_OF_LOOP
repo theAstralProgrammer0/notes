@@ -1,0 +1,116 @@
+The `for/of` loop in JavaScript is used to iterate over the values of an
+iterable object, such as arrays, strings, maps, sets, and more. It allows you
+to easily access each value in the sequence.
+
+### Syntax
+```javascript
+for (variable of iterable) {
+  // code block to be executed
+}
+```
+
+- `variable`: A variable that holds the value of the current iteration. It can
+              be declared with `const`, `let`, or `var`.
+- `iterable`: An object that has iterable properties, meaning it can be looped
+              over.
+
+### Examples
+
+#### 1. Iterating Over an Array
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+for (const num of numbers) {
+  console.log(num);
+}
+```
+Output:
+```
+1
+2
+3
+4
+5
+```
+In this example, the `for/of` loop iterates over each number in the `numbers`
+array, logging them to the console.
+
+#### 2. Iterating Over a String
+```javascript
+const str = "hello";
+
+for (const char of str) {
+  console.log(char);
+}
+```
+Output:
+```
+h
+e
+l
+l
+o
+```
+Here, the `for/of` loop iterates over each character in the string `str`.
+
+#### 3. Iterating Over a Map
+```javascript
+const map = new Map([
+  ['a', 1],
+  ['b', 2],
+  ['c', 3]
+]);
+
+for (const [key, value] of map) {
+  console.log(`${key}: ${value}`);
+}
+```
+Output:
+```
+a: 1
+b: 2
+c: 3
+```
+In this example, the `for/of` loop iterates over each key-value pair in the
+`map`, logging them to the console.
+
+#### 4. Iterating Over a Set
+```javascript
+const set = new Set([1, 2, 3, 4, 5]);
+
+for (const value of set) {
+  console.log(value);
+}
+```
+Output:
+```
+1
+2
+3
+4
+5
+```
+The `for/of` loop iterates over each value in the `set`, logging them to the
+console.
+
+#### 5. Iterating Over a NodeList
+```javascript
+const items = document.querySelectorAll('li');
+
+for (const item of items) {
+  console.log(item.textContent);
+}
+```
+Output:
+```
+Item 1
+Item 2
+Item 3
+```
+Assuming there are `<li>` elements in the HTML, the `for/of` loop iterates over
+each `li` element in the NodeList, logging their text content.
+
+### Conclusion
+The `for/of` loop is a versatile and convenient way to iterate over values in
+iterable objects in JavaScript. It simplifies the process of accessing each
+element in a sequence, making your code more readable and concise.

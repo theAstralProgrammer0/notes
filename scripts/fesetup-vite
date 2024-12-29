@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+app=$1
+
+# Update, Download and Install node
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-get install -y npx npm node 
+echo "Updated, downloaded, and installed node successfully!"
+
+# Create a react app
+npx create-react-app "$app"
+npm install react-router-dom redux react-redux axios tailwindcss react-hot-toast
+echo "Created a react app named $app"
+
+# Setup tailwind
+npx tailwindcss init
+
+cat <<EOL > tailwind.config.js
+module.exports = {
+  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  darkMode: false,
+  theme: {
+    extend: {},
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+}
+EOL
+
+cat <<EOL > src/index.css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+EOL
+
+echo "Tailwind CSS configuration file has been written successfully."
+
+mv node_modules package-lock.json package.json public src tailwind.config.js "$app"
+
+# Clean up and set up file-folder structure
+echo "Cleaning up ..."
+echo "Setting up ..."
+rm "$app/App.css" "$app/App.test.js" "$app/logo.svg" "$app/reportWebVitals.js" "$app/setupTests.js" && mkdir "$app/assets" "$app/components" "$app/pages" "$app/utils" "$app/store"
+
+echo "DONE!"

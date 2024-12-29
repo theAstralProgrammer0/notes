@@ -1,0 +1,92 @@
+Rest Parameters
+Rest parameters in ES6 allow you to represent an indefinite number of arguments
+as an array. This is useful when you're not sure how many arguments will be
+passed to a function.
+
+Syntax:
+function myFunction(...args) {
+  // args is an array containing the arguments
+  console.log(args);
+}
+
+Example
+
+Let's say we want to create a function that sums an arbitrary number of
+arguments:
+
+function sum(...numbers) {
+  return numbers.reduce((acc, curr) => acc + curr, 0); <- See ES6_REDUCE_AND_ACC
+}
+
+console.log(sum(1, 2, 3, 4)); // Output: 10
+
+
+Spread Parameters
+Spread parameters allow you to expand elements of an array (or other iterable)
+into individual elements. This is useful for passing elements of an array as
+arguments to a function or for combining arrays.
+
+Syntax:
+let arr = [1, 2, 3];
+console.log(...arr); // Output: 1 2 3
+
+Example
+Combining arrays using spread:
+
+let arr1 = [1, 2, 3];
+let arr2 = [4, 5, 6];
+let combined = [...arr1, ...arr2];
+console.log(combined); // Output: [1, 2, 3, 4, 5, 6]
+
+
+Differences
+Rest Parameters:
+1. Used in function definitions.
+2. Gathers multiple elements into a single array.
+3. Syntax: ...args in function parameter list.
+
+Spread Parameters:
+1. Used in function calls or array/object literals.
+2. Expands an array (or other iterable) into individual elements.
+3. Syntax: ...arr in function calls or array/object literals.
+
+
+Why They're Both Used
+Rest Parameters:
+1. They make functions more flexible by allowing an indefinite number of arguments.
+2. Useful for operations on variable-length arguments (e.g., mathematical operations, concatenations).
+
+Spread Parameters:
+1. They facilitate operations that require individual elements from an array.
+2. Useful for merging arrays, copying arrays, or passing arrays as function arguments.
+
+
+Real World Project Examples
+Rest Parameters:
+1. Logging Utility:
+
+function logMessages(...messages) {
+  messages.forEach(message => console.log(message));
+}
+
+logMessages("Error: Something went wrong", "Warning: Check your input"); // Logs each message
+
+
+Spread Parameters:
+1. Combining Configuration Objects:
+
+const defaultConfig = { host: 'localhost', password: 'SumoSlammer', port: 8080 };
+const userConfig = { port: 9000, password: 'Khalid2015' };
+
+const finalConfig = { ...defaultConfig, ...userConfig };
+console.log(finalConfig); // Output: { host: 'localhost', password: 'Khalid2015', port: 9000 }
+
+Note: The output gotten above signifies that when two objects are combined
+together using the spread operator, if there're any 2 or more keys with the
+same name in any or all of the objects, the final value in the combined object
+will be the final/last key in the total spread.
+
+In this example, the total spread is:
+spread -> host: 'localhost', password: 'SumoSlammer', port: 8000, port: 9000, password: 'Khalid2015'
+combined -> host: 'localhost', password: 'Khalid2015', port: 9000
+

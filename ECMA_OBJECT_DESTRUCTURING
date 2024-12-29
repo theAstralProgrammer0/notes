@@ -1,0 +1,104 @@
+Object destructuring in JavaScript allows you to extract properties from an
+object and assign them to variables in a more concise and readable manner. This
+can be particularly useful for dealing with large objects or when you only need
+a few properties from an object.
+
+Here are some examples to illustrate object destructuring:
+
+### Basic Example
+Suppose you have an object representing a person:
+
+```javascript
+const person = {
+  name: 'John Doe',
+  age: 30,
+  city: 'New York'
+};
+```
+
+Without destructuring, you would assign the properties to variables like this:
+
+```javascript
+const name = person.name;
+const age = person.age;
+const city = person.city;
+```
+
+With object destructuring, you can achieve the same thing more concisely:
+
+```javascript
+const { name, age, city } = person;
+console.log(name); // 'John Doe'
+console.log(age);  // 30
+console.log(city); // 'New York'
+```
+
+### Renaming Variables
+You can also rename the variables during destructuring by using a colon (`:`):
+
+```javascript
+const { name: fullName, age: years, city: location } = person;
+console.log(fullName); // 'John Doe'
+console.log(years);    // 30
+console.log(location); // 'New York'
+```
+
+### Default Values
+If a property does not exist in the object, you can set a default value:
+
+```javascript
+const person = {
+  name: 'Jane Doe',
+  age: 25
+};
+
+const { name, age, city = 'Unknown' } = person;
+console.log(city); // 'Unknown'
+```
+
+### Nested Objects
+Destructuring can also be used with nested objects:
+
+```javascript
+const person = {
+  name: 'Alice',
+  address: {
+    city: 'Los Angeles',
+    state: 'CA'
+  }
+};
+
+const { name, address: { city, state } } = person;
+console.log(city);  // 'Los Angeles'
+console.log(state); // 'CA'
+```
+
+### Destructuring in Function Parameters
+Object destructuring can be used in function parameters to directly access
+properties of an object passed as an argument:
+
+```javascript
+const displayPerson = ({ name, age }) => {
+  console.log(`Name: ${name}, Age: ${age}`);
+};
+
+const person = {
+  name: 'Bob',
+  age: 40
+};
+
+displayPerson(person); // 'Name: Bob, Age: 40'
+```
+
+### Note
+When destructuring an object, the variable names must match the keys in the
+object. The order of the keys does not matter. For example:
+
+```javascript
+const { age, name } = person;
+console.log(age);  // 40
+console.log(name); // 'Bob'
+```
+
+This makes object destructuring a powerful and flexible feature in JavaScript,
+simplifying the process of extracting values from objects.

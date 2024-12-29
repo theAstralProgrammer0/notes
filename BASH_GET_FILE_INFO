@@ -1,0 +1,104 @@
+In Bash, you can use a few different commands to display properties of a file or directory, such as size, extension, modification time, etc. Here are the most commonly used methods:
+
+### 1. **Using `ls -l`**
+The `ls -l` command lists detailed information about files and directories:
+```bash
+ls -l /path/to/file_or_directory
+```
+
+Output example:
+```
+-rw-r--r--  1 user  group   1024 Nov 16 12:34 myfile.txt
+```
+
+**Details provided**:
+- File permissions (`-rw-r--r--`)
+- Number of links (`1`)
+- Owner (`user`)
+- Group (`group`)
+- Size in bytes (`1024`)
+- Modification date and time (`Nov 16 12:34`)
+- File name (`myfile.txt`)
+
+### 2. **Using `stat`**
+The `stat` command provides comprehensive information about a file or directory:
+```bash
+stat /path/to/file_or_directory
+```
+
+Example output:
+```
+  File: myfile.txt
+  Size: 1024       Blocks: 8          IO Block: 4096   regular file
+Device: 803h/2051d Inode: 1234567     Links: 1
+Access: (0644/-rw-r--r--)  Uid: ( 1000/user)   Gid: ( 1000/group)
+Access: 2024-11-16 12:34:56.789012345 +0000
+Modify: 2024-11-16 12:34:56.789012345 +0000
+Change: 2024-11-16 12:34:56.789012345 +0000
+ Birth: -
+```
+
+**Key properties**:
+- Size, blocks, and I/O block size
+- File type (e.g., regular file, directory)
+- Permissions (both numeric and symbolic)
+- User ID (UID) and Group ID (GID)
+- Access, modification, and change timestamps
+
+### 3. **Using `file`**
+The `file` command determines the file type based on its content:
+```bash
+file /path/to/file_or_directory
+```
+
+Example output:
+```
+myfile.txt: ASCII text
+```
+
+### 4. **Using `du` for Size**
+To check the size of a file or directory:
+```bash
+du -sh /path/to/file_or_directory
+```
+
+Output example:
+```
+1.1M    /path/to/file_or_directory
+```
+
+### 5. **Using `find` for Extended Properties**
+To display additional properties like file type, size, and permissions:
+```bash
+find /path/to/file -maxdepth 0 -printf "Name: %f\nSize: %s bytes\nType: %y\nPermissions: %M\n"
+```
+
+Example output:
+```
+Name: myfile.txt
+Size: 1024 bytes
+Type: f
+Permissions: -rw-r--r--
+```
+
+### 6. **Using `stat` for Specific Properties**
+To get specific properties like size and modification time:
+```bash
+stat --format="%s bytes, last modified on %y" /path/to/file
+```
+
+Output example:
+```
+1024 bytes, last modified on 2024-11-16 12:34:56.789012345 +0000
+```
+
+### Summary Table of Commands
+| Command         | Use Case                                   |
+|-----------------|--------------------------------------------|
+| `ls -l`         | Basic properties like size, date, and mode |
+| `stat`          | Detailed file attributes                   |
+| `file`          | Determine the file type                    |
+| `du -sh`        | Get the size of a file or directory        |
+| `find -printf`  | Custom display of file properties          |
+
+Would you like more examples or help with specific commands?

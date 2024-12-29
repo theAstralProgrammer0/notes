@@ -1,0 +1,113 @@
+Solidity Keywords
+Here’s a table of important keywords in Solidity, followed by how they work in a real-life example:
+
+Keyword	Purpose
+pragma ->	Specifies the Solidity version to use.
+contract ->	Defines a smart contract (like a class in programming).
+constructor ->	A special function that runs once during contract deployment.
+function ->	Defines executable code blocks that users or contracts can call.
+public ->	Makes a state variable or function accessible from outside the contract.
+private	-> Restricts access to the variable/function within the same contract.
+external -> Makes a function callable only from outside the contract (not internally).
+internal -> Restricts access to the current contract and its derived contracts.
+mapping	-> Creates a key-value storage, like a dictionary.
+struct	-> Allows grouping multiple variables into a single type.
+event	-> Emits logs that external applications can listen to.
+require	-> Ensures a condition is true; otherwise, it reverts the transaction.
+modifier	-> Custom logic that can be reused across multiple functions.
+payable	-> Allows a contract or function to accept Ether.
+view -> Marks a function that only reads data but doesn’t modify the state.
+pure -> Marks a function that neither reads nor modifies the state.
+emit -> Used to trigger an event.
+msg.sender -> Represents the address of the user or contract that called the function.
+msg.value -> Represents the Ether sent along with a transaction.
+address -> Represents an Ethereum address.
+uint -> An unsigned integer (non-negative numbers).
+
+Real-Life Case Study: Crowdfunding Contract
+Here’s how we can apply these keywords to build a crowdfunding platform.
+
+Crowdfunding Smart Contract:
+
+solidity
+Copy code
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.28;
+
+contract Crowdfunding {
+    struct Project {
+        string title;
+        address payable creator;
+        uint goalAmount;
+        uint currentBalance;
+        bool completed;
+    }
+
+    mapping(uint => Project) public projects;
+    uint public projectCount;
+
+    event ProjectCreated(uint projectId, string title, uint goalAmount);
+    event ContributionMade(uint projectId, address contributor, uint amount);
+    event ProjectCompleted(uint projectId);
+
+    constructor() {}
+
+    function createProject(string memory _title, uint _goalAmount) public {
+        require(_goalAmount > 0, "Goal amount must be greater than zero");
+
+        projects[projectCount] = Project({
+            title: _title,
+            creator: payable(msg.sender),
+            goalAmount: _goalAmount,
+            currentBalance: 0,
+            completed: false
+        });
+
+        emit ProjectCreated(projectCount, _title, _goalAmount);
+        projectCount++;
+    }
+
+    function contribute(uint _projectId) public payable {
+        require(msg.value > 0, "Must send Ether to contribute");
+        Project storage project = projects[_projectId];
+        require(!project.completed, "Project is already completed");
+
+        project.currentBalance += msg.value;
+
+        if (project.currentBalance >= project.goalAmount) {
+            project.completed = true;
+            emit ProjectCompleted(_projectId);
+        }
+
+        emit ContributionMade(_projectId, msg.sender, msg.value);
+    }
+
+    function withdrawFunds(uint _projectId) public {
+        Project storage project = projects[_projectId];
+        require(project.completed, "Project is not completed yet");
+        require(msg.sender == project.creator, "Only the creator can withdraw");
+
+        uint amount = project.currentBalance;
+        project.currentBalance = 0;
+
+        project.creator.transfer(amount);
+    }
+}
+Explanation of Keywords in the Code
+struct:
+Groups project details (e.g., title, goal amount, creator) into a single data type.
+
+mapping:
+Stores all projects using a unique project ID (uint) as the key.
+
+event:
+Logs significant actions like project creation, contributions, and completion.
+
+require:
+Validates input (e.g., non-zero goal amount, valid contributions).
+
+payable:
+Marks contribute as a function that can receive Ether.
+
+msg.sender and msg.value:
+Tracks who sent the transaction and the Ether amount they contributed.

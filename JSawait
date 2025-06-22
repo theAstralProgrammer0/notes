@@ -1,0 +1,350 @@
+🤔 Why not await in async get(key)?
+
+```js
+async get(key) {
+  return this.client.get(key); // <-- Not using 'await' here
+}
+```
+
+This is technically fine because the caller of get(key) will still receive a
+Promise, and they are expected to await it like:
+
+```js
+const value = await redisClient.get('someKey');
+```
+
+So even though we didn’t await inside the get() method, it returns the promise
+to the caller, who can await it. That makes it still valid and functional.
+
+But…
+
+👉 If you wanted to handle errors inside get(), or work with the result in that
+method, you would need to await it.
+
+
+✅ General Rule / Litmus Test: When to Use await
+
+Ask yourself these questions:
+
+🔬 LITMUS TEST
+1. 🔄 Am I using the result immediately inside the function?
+
+```js
+const value = await this.client.get(key);
+console.log(value); // ✅ Needs await
+```
+✅ Use await — You’re working with the result right now.
+
+2. 🎁 Am I just returning the promise to someone else to handle?
+```js
+return this.client.get(key); // ✅ Safe
+```
+❌ No need for await — let the caller deal with it.
+
+3. 🧯 Do I want to handle errors inside this method with try/catch?
+```js
+try {
+  const value = await this.client.get(key);
+  return value;
+} catch (err) {
+  console.error('Redis error:', err);
+  return null;
+}
+```
+✅ Use await — can’t catch errors from a raw promise unless you await.
+
+4. 🧠 Is the function already async?
+You can only use await inside an async function, so:
+1. If it’s async — you can await (but don’t always need to).
+2. If it’s not — you must return the promise (or wrap things up differently).
+
+⚡ Practical Script to Try It Out
+Here’s a little demo:
+```js
+async function testRedis() {
+  const valuePromise = redisClient.get('someKey'); // Not awaited
+  console.log('Step 1'); // Logs before the value resolves
+  const value = await redisClient.get('someKey');  // Awaited
+  console.log('Step 2', value); // Logs after the value is ready
+}
+```
+
+You'll see:
+```bash
+Step 1
+Step 2 xyz
+```
+
+Which proves that await pauses execution until the value is ready, while a bare
+promise moves on.
+
+💡 TL;DR
+
+| Situation                            | Use `await`?                |
+| ------------------------------------ | --------------------------- |
+| You need the result immediately      | ✅ Yes                       |
+| You’re just returning the promise    | ❌ No                        |
+| You want to catch errors here        | ✅ Yes                       |
+| You’re chaining other `await`s       | ✅ Yes                       |
+| You want max performance in parallel | ❌ Maybe use `Promise.all()` |
+
+
+-----------------------------------------------------------------------------------------------------
+
+Awesome question, Bryan — this is where your earlier **await-litmus test**
+comes back in play.
+
+Let’s break it down with **your specific function**:
+
+```js
+async set(key, value, duration) {
+  await this.client.set(key, String(value), { EX: duration });
+}
+```
+
+---
+
+🔍 So, why are we using `await` here?
+
+We're doing this because:
+
+> ✅ **We want to make sure the `SET` operation finishes successfully (or
+  fails)** ***before*** continuing or returning from this method.
+
+---
+
+🎯 Matching to the Litmus Test
+
+Let’s run through the **litmus test** again for this specific case:
+
+---
+
+🔄 **Am I using the result immediately?**
+
+* **Yes**, indirectly.
+  Even though `.set()` doesn't return a value you're using directly, you're
+  still relying on its **success or failure**.
+
+✅ **Use `await`** so the operation actually completes before moving on.
+
+---
+
+🧯 **Do I want to handle errors in this method?**
+
+* If you want to catch and log errors from `set()`, `await` is **required**.
+  Without `await`, errors thrown in the promise would **not be caught** in the
+  same `try/catch` block.
+
+✅ **Use `await`** so error handling works as expected.
+
+---
+
+🔄 What if we *didn’t* use `await`?
+
+```js
+async set(key, value, duration) {
+  this.client.set(key, String(value), { EX: duration }); // no await!
+}
+```
+
+* This would immediately return a pending promise.
+* Any Redis errors would go **unhandled** unless the caller explicitly `.catch()`es it.
+* Worst case: your app silently fails to save critical data like session tokens.
+❌ Dangerous in production logic.
+
+---
+
+🧪 Real-World Analogy
+
+> **Without `await`:** You give a sticky note to the receptionist and **walk
+  away immediately**, assuming they'll handle it, without checking if they even
+  saw it.
+
+> **With `await`:** You **stay until the receptionist confirms**: “Yes, the
+  note is placed. All good.”
+
+> If there’s an issue (e.g., “Sorry, I ran out of paper”), you’ll catch it
+  right there.
+
+---
+
+✅ Summary: Why `await` in `set()`?
+
+| Reason                                   | Status |
+| ---------------------------------------- | ------ |
+| Ensures Redis actually stores the data   | ✅      |
+| Allows proper `try/catch` error handling | ✅      |
+| Prevents silent promise failures         | ✅      |
+| Blocks until confirmation of write       | ✅      |
+
+---
+
+Perfect — let’s show how **not using `await`** can lead to silent failures or
+misleading logs. We’ll contrast two versions of the same script that stores a
+value in Redis and logs the result.
+
+---
+
+🧪 Version 1: ❌ **Without `await`**
+
+```js
+async function unsafeSet(key, value, duration) {
+  try {
+    console.log('Setting key...');
+    redisClient.set(key, value, duration); // No await
+    console.log('Key set successfully!');
+  } catch (err) {
+    console.error('Caught error:', err);
+  }
+}
+
+unsafeSet('testKey', '12345', 60);
+```
+
+❌ What happens:
+
+* `console.log('Key set successfully!')` runs **immediately**, even before
+  Redis has done anything.
+* If `redisClient.set()` fails (e.g., Redis is down), the **error will NOT be
+  caught** by `catch`.
+* You’ll be misled into thinking the operation worked.
+
+---
+
+✅ Version 2: **With `await`**
+
+```js
+async function safeSet(key, value, duration) {
+  try {
+    console.log('Setting key...');
+    await redisClient.set(key, value, duration); // Awaited!
+    console.log('Key set successfully!');
+  } catch (err) {
+    console.error('Caught error:', err);
+  }
+}
+
+safeSet('testKey', '12345', 60);
+```
+
+✅ What happens:
+
+* The function **waits** for Redis to confirm success.
+* If there's an error (e.g. bad connection, invalid config), it’s **caught**
+  and logged.
+* Logs are **accurate and reliable**.
+
+---
+
+🔥 Try breaking Redis to test it:
+
+1. **Stop your local Redis server**.
+2. Run both scripts.
+3. In version 1, no error will appear (unless you chain `.catch()` outside).
+4. In version 2, you’ll get a proper log like:
+
+```
+Setting key...
+Caught error: [Connection refused]
+```
+
+---
+
+💡 Takeaway:
+
+| With `await`                     | Without `await`                           |
+| -------------------------------- | ----------------------------------------- |
+| Blocks until success or error    | Moves on immediately                      |
+| Errors are caught in `try/catch` | Errors are lost unless externally handled |
+| Logging is accurate              | Logging can be misleading                 |
+
+
+-----------------------------------------------------------------------------------------------------
+Here's a Redis client wrapper with built-in error handling, using await where
+appropriate. It ensures every operation is safely awaited and wrapped in
+try/catch — so you're protected from silent promise rejections or unexpected
+crashes.
+
+✅ RedisClient with Auto-Handled Await + Error Logging
+```js
+import { createClient } from 'redis';
+
+class RedisClient {
+  constructor() {
+    this.client = createClient({
+      url: process.env.REDIS_URL || 'redis://localhost:6379',
+    });
+
+    this.client.on('error', (err) =>
+      console.error('[Redis Error]', err)
+    );
+
+    this.client.connect().catch((err) =>
+      console.error('[Redis Connect Error]', err)
+    );
+  }
+
+  isAlive() {
+    return this.client.isOpen;
+  }
+
+  async get(key) {
+    try {
+      const value = await this.client.get(key);
+      return value;
+    } catch (err) {
+      console.error(`[Redis GET Error] Key: ${key}`, err);
+      return null;
+    }
+  }
+
+  async set(key, value, duration) {
+    try {
+      await this.client.set(key, String(value), { EX: duration });
+    } catch (err) {
+      console.error(`[Redis SET Error] Key: ${key}`, err);
+    }
+  }
+
+  async del(key) {
+    try {
+      await this.client.del(key);
+    } catch (err) {
+      console.error(`[Redis DEL Error] Key: ${key}`, err);
+    }
+  }
+
+  async exists(key) {
+    try {
+      const result = await this.client.exists(key);
+      return result === 1;
+    } catch (err) {
+      console.error(`[Redis EXISTS Error] Key: ${key}`, err);
+      return false;
+    }
+  }
+
+  async setJSON(key, obj, duration) {
+    try {
+      const stringified = JSON.stringify(obj);
+      await this.client.set(key, stringified, { EX: duration });
+    } catch (err) {
+      console.error(`[Redis SET_JSON Error] Key: ${key}`, err);
+    }
+  }
+
+  async getJSON(key) {
+    try {
+      const data = await this.client.get(key);
+      return data ? JSON.parse(data) : null;
+    } catch (err) {
+      console.error(`[Redis GET_JSON Error] Key: ${key}`, err);
+      return null;
+    }
+  }
+}
+
+const redisClient = new RedisClient();
+export default redisClient;
+```
+

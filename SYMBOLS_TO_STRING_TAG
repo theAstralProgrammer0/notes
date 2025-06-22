@@ -1,0 +1,135 @@
+## Summary
+
+In JavaScript, you can customize the default string description shown by `Object.prototype.toString` by defining a getter for the well‑known symbol `Symbol.toStringTag` on your class prototype citeturn0search0. For general string coercion (e.g. `String(obj)`, template literals, or many `console.log` implementations), you can override the `toString()` method on the class prototype citeturn0search3. Note, however, that by the ECMAScript specification a `toString()` implementation **must** return a string; if it returns a non‑string value, JavaScript will fall back to the default `"[object Type]"` representation or throw a `TypeError` citeturn0search2. If you actually need a method to return an object (rather than a string), you should create a separate method—such as `toJSON()` or a custom `describe()`—instead of overloading the string conversion protocol citeturn0search4.
+
+---
+
+## 1. Customizing `Object.prototype.toString` with `Symbol.toStringTag`
+
+### How It Works
+- When you call `Object.prototype.toString.call(obj)`, JavaScript looks for a `[Symbol.toStringTag]` property on `obj` and uses its string value as the “Type” in `"[object Type]"` citeturn0search2.  
+- By defining a **getter** for `Symbol.toStringTag` on your class’s prototype, you change that tag without touching global prototypes citeturn0search1.
+
+### Example
+
+```js
+class SFO {
+  get [Symbol.toStringTag]() {
+    return 'MySpecialSFO';
+  }
+}
+
+const o = new SFO();
+console.log(Object.prototype.toString.call(o));
+// → "[object MySpecialSFO]"
+```
+
+> **Browser compatibility note**: All modern browsers and Node.js versions support `Symbol.toStringTag` since ES2015 citeturn0search6.
+
+---
+
+## 2. Overriding `toString()` for General String Coercion
+
+### How It Works
+- JavaScript uses an object’s own `toString()` method when it needs a string representation (e.g., `String(obj)`, `obj + ''`) citeturn0search7.  
+- By providing your own `toString()` on the class prototype, you control exactly what that conversion yields.
+
+### Example
+
+```js
+class SFO {
+  toString() {
+    // Must return a string per spec!
+    return `<SFO id=${this.id || 'unknown'}>`;
+  }
+}
+
+const o = new SFO();
+o.id = 42;
+console.log(String(o));       // "<SFO id=42>"
+console.log(`${o}`);          // "<SFO id=42>"
+console.log(o + ' is here');  // "<SFO id=42> is here"
+```
+
+> **Warning:** If your `toString()` returns **any** non‑string, engines will ignore it and revert to `"[object Object]"` or throw, per the spec citeturn0search9.
+
+---
+
+## 3. Why You Can’t Return an Object Directly from `toString()`
+
+The ECMAScript specification requires that `toString()` return a primitive string. If you attempt to return an object:
+
+```js
+class SFO {
+  toString() {
+    return { foo: 'bar' };
+  }
+}
+
+String(new SFO());  // → "[object Object]"  (the fallback)
+```
+
+…or in strict mode, engines may even throw a `TypeError` citeturn0search2. Thus, you cannot have the core string‑conversion protocol yield a real object.
+
+---
+
+## 4. Returning an Object via a Custom Method
+
+If your goal is to **retrieve** an object representation, add a dedicated method:
+
+```js
+class SFO {
+  constructor(data) {
+    this.data = data;
+  }
+
+  toJSON() {
+    // JSON.stringify(obj) and many libraries will use this
+    return { ...this.data, _type: 'SFO' };
+  }
+
+  describe() {
+    // Your own custom object-returning method
+    return { info: this.data, timestamp: Date.now() };
+  }
+}
+
+const o = new SFO({ airport: 'SFO', city: 'San Francisco' });
+console.log(JSON.stringify(o)); // '{"airport":"SFO","city":"San Francisco","_type":"SFO"}'
+console.log(o.describe());      // { info: { airport: 'SFO', city: 'San Francisco' }, timestamp: 161884... }
+```
+
+- `toJSON()` is automatically used by `JSON.stringify`, returning an **object** which is then serialized citeturn0search4.  
+- A bespoke `describe()` (or similarly named) method lets you return whatever object structure you need without conflicting with the string‑conversion protocol citeturn0search8.
+
+---
+
+## 5. Putting It All Together
+
+1. **For a custom tag in `Object.prototype.toString`**:  
+   ```js
+   class MyType {
+     get [Symbol.toStringTag]() { return 'MyType'; }
+   }
+   Object.prototype.toString.call(new MyType()); // "[object MyType]"
+   ```  
+   citeturn0search0turn0search2  
+
+2. **For everyday string conversions**:  
+   ```js
+   class MyType {
+     toString() { return `MyType(${this.id})`; }
+   }
+   String(new MyType()); // "MyType(undefined)"
+   ```  
+   citeturn0search3turn0search7  
+
+3. **For returning actual objects**: define `toJSON` or another method:  
+   ```js
+   class MyType {
+     toJSON() { return { id: this.id, tag: 'MyType' }; }
+   }
+   ```  
+   citeturn0search4turn0search8  
+
+By combining these techniques, you gain full control over how your instances are represented both as strings and as object literals.

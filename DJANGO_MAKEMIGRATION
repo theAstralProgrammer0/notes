@@ -1,0 +1,45 @@
+To create migrations in Django, follow these steps:
+
+Modify your models:
+Make the necessary changes to your models in the models.py file of your app.
+This could involve adding new models, modifying existing ones, or deleting
+models.
+
+Run makemigrations:
+Open your terminal and navigate to your project's root directory (where
+manage.py is located). Then, run the following command:
+
+Code
+
+    python manage.py makemigrations
+
+This command will scan your models for changes and create new migration files
+in the migrations directory of your app. If you want to create migrations for a
+specific app, you can specify the app name:
+
+Code
+
+    python manage.py makemigrations <app_name>
+
+Review the migration files:
+It's a good practice to review the generated migration files before applying
+them. These files are located in the migrations directory of your app and
+contain the instructions for modifying your database schema.
+
+Apply the migrations:
+To apply the migrations and update your database schema, run the following
+command:
+
+Code
+
+    python manage.py migrate
+
+This command will execute all pending migrations, including the ones you just
+created. If you want to apply migrations for a specific app, you can specify
+the app name:
+
+Code
+
+    python manage.py migrate <app_name>
+
+These steps should be repeated every time the models are changed.

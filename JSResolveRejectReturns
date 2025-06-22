@@ -1,0 +1,18 @@
+When resolve() is called without arguments in a Promise, it returns a resolved Promise with a value of undefined. Similarly, when reject() is called without arguments, it returns a rejected Promise with a value of undefined. These values are not directly passed to the then or catch chains. Instead, then is called with undefined as the resolved value, and catch is called with undefined as the rejected value. 
+Detailed Explanation:
+resolve() with no arguments:
+When resolve() is called without a value, it implicitly resolves the Promise with the value undefined. 
+The then method's callback will be executed with undefined as the argument if no error has occurred before the resolve() call. 
+reject() with no arguments:
+When reject() is called without a value, it implicitly rejects the Promise with the value undefined. 
+The catch method's callback will be executed with undefined as the argument. 
+Accessing the values in then and catch chains:
+then chain:
+The then method takes two optional arguments: a success callback and a failure callback (or error handler). 
+When a Promise is resolved, the success callback is executed. If the resolve() was called with a value, that value is passed as an argument to the success callback. 
+If resolve() was called without a value, the success callback receives undefined. 
+catch chain:
+The catch method is a shorthand for then(null, onRejected) and is used to handle errors (rejections) of a Promise. 
+When a Promise is rejected, the error handler (or catch's callback) is executed. If the reject() was called with a value, that value (usually an error object) is passed as an argument to the error handler. 
+If reject() was called without a value, the error handler receives undefined. 
+Example:

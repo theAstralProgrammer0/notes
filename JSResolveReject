@@ -1,0 +1,34 @@
+In JavaScript, resolve and reject are functions passed as parameters to the
+executor function within a Promise constructor. They are crucial for managing
+the state of a Promise and signaling its completion or failure. 
+
+Significance of resolve and reject:
+
+- resolve(value):
+When a promise is successfully fulfilled, the resolve function is called with a
+value (the result of the operation). This transitions the promise from its
+pending state to the fulfilled state, making the value available to the .then()
+handler.
+
+- reject(error):
+When a promise encounters an error or cannot be completed successfully, the
+reject function is called with an error object (or a reason for failure). This
+transitions the promise from its pending state to the rejected state, making
+the error available to the .catch() handler or the second argument of .then(). 
+
+In essence, resolve and reject:
+
+Control the Promise's state:
+They determine whether the promise becomes resolved (fulfilled) or rejected
+(failed).
+
+Communicate results:
+They pass the outcome of the asynchronous operation (success or failure) to the
+promise's consumers.
+
+Enable chaining and error handling:
+The .then() and .catch() methods rely on the resolve and reject calls to
+determine which handler to execute. 
+
+
+See also JSPromises

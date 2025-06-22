@@ -1,0 +1,83 @@
+----------------------------------------------------------------------------------
+
+Okay, to extract the last two numbers from your string using Python's re
+library and populate a dictionary as you described, you should primarily use
+the following methods:
+
+re.search(): This is the core method you'll use from the re library. Its
+purpose is to scan through a string, looking for the first location where your
+regular expression pattern produces a match. You will use re.search() by
+providing your pattern and the input string.
+
+Match Object Methods (specifically for captured groups): When re.search() finds
+a match, it returns a "match object". This object contains information about
+the match, including any parts of the string you've "captured" using
+parentheses in your pattern. You will use methods on this match object to
+retrieve the specific strings that matched your captured groups – in this case,
+the two numbers.
+
+Here's how you would use them in the context of your task:
+
+First, you'll define a regular expression pattern. This pattern will be
+designed to look for one or more digits, followed by a space, followed by one
+or more digits, specifically at the end of the string. You'll use parentheses
+around each set of digits to "capture" them.
+
+Next, for each string you want to process, you will pass the string and your
+pattern to re.search().
+
+If re.search() finds a match (which it will if the string ends with two
+space-separated numbers), it will return a match object. You will then use
+methods on this match object to get the string value of the first captured
+group (the first number) and the string value of the second captured group (the
+second number).
+
+After obtaining these two number strings from the match object, you will need
+to convert them into actual numbers (integers) so they can be used as a
+dictionary key and values.
+
+Finally, you will implement the dictionary logic: use the first number as the
+key. Check if this key already exists in your dictionary. If it does, retrieve
+the existing list associated with that key and append the second number to it.
+If the key does not exist, create a new entry in the dictionary with the first
+number as the key and a new list containing only the second number as its
+value.
+
+----------------------------------------------------------------------------------
+
+Okay, if you want to match any single number that is part of a specific,
+predefined list of numbers, the regex pattern uses the alternation operator |
+within a group.
+
+The general pattern looks like this:
+
+(?:\b(?:num1|num2|num3|...|numN)\b)
+
+Let's break that down:
+
+(?: ... ): This is a non-capturing group. It groups the alternatives together
+so the | operator works correctly, but doesn't create a separate capture group
+for the match (which is often what you want when just checking if any of the
+numbers are present).
+
+\b: These are word boundaries. They ensure that the pattern matches the numbers
+only when they appear as whole words (i.e., not embedded within other numbers
+or words like matching "10" in "110" or "marketing"). Using \b is crucial when
+matching specific numbers.
+
+num1|num2|num3|...|numN: This is the core part. You list the exact numbers you
+want to match, separated by the | operator. The regex engine will try to match
+num1, OR num2, OR num3, and so on.
+
+Example:
+
+If you wanted to match the numbers 10, 25, or 99, the pattern would be:
+
+\b(?:10|25|99)\b
+
+When using this pattern with a function like re.search() or re.findall(), it
+would find any occurrence of 10, 25, or 99 that appears as a distinct number in
+the string.
+
+----------------------------------------------------------------------------------
+

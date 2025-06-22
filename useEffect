@@ -1,0 +1,40 @@
+In React (and by extension Next.js), the `useEffect` hook lets you run side-effects—things like data fetching, subscriptions, or manually manipulating the DOM—after your component renders. Here’s how it works in your `[id].tsx`:
+
+```tsx
+useEffect(() => {
+  if (!query.id) return;
+  fetch(`/api/training/videos/${query.id}/`)
+    .then(r => r.json())
+    .then(setVideo);
+}, [query.id]);
+```
+
+1. **Effect function**  
+   The first argument is a function (the “effect”) that React will call whenever it needs to run your side-effect. In your case, you’re fetching video data once you know `query.id`.
+
+2. **Dependency array**  
+   The second argument is an array of _dependencies_—values that React “watches.”  
+   - When the component first mounts, React sees `query.id` in the array and runs your effect.  
+   - On subsequent renders, React compares the current `query.id` to its previous value. If it changed, React runs your effect again; if not, it skips running the fetch again.  
+   - An empty array (`[]`) means “run once, on mount, and never again.”  
+   - Leaving off the array entirely would cause the effect to run on _every_ render (usually undesirable for data fetching or subscriptions).
+
+3. **Multiple `useEffect` hooks**  
+   Yes—you can (and often should) use more than one `useEffect` in a single component, each handling a distinct concern. For example:  
+   ```tsx
+   // Effect A: fetch data
+   useEffect(() => { /* … */ }, [query.id]);
+
+   // Effect B: set document title
+   useEffect(() => {
+     if (video) document.title = video.title;
+   }, [video]);
+   ```
+   Because each `useEffect` has its own dependency array, they run independently. React guarantees that they execute in the order they’re declared, and only when _their_ dependencies change—so there’s no “cross-talk” or collision between them.
+
+---
+
+**In summary**  
+- `useEffect(fn, deps)` runs `fn` after a render _only_ when any value in `deps` has changed since the last time.  
+- The dependency array lets you control exactly _when_ your side-effect should re-run.  
+- You can declare as many `useEffect` hooks as you like; just give each its own, focused dependency list so their triggers remain isolated.

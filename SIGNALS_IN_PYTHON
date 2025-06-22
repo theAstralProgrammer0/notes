@@ -1,0 +1,36 @@
+Here's how to capture a signal from standard input and perform an operation
+once detected in a Python script:
+
+```Python
+
+import signal
+import sys
+
+def signal_handler(sig, frame):
+    print('Signal detected:', sig)
+    # Perform your desired operation here
+    print('Performing operation...')
+    sys.exit(0)
+
+# Register the signal handler for specific signals
+signal.signal(signal.SIGINT, signal_handler) # Handles Ctrl+C (SIGINT)
+# signal.signal(signal.SIGTERM, signal_handler)  #Handles termination signal
+# signal.signal(signal.SIGHUP, signal_handler) #Handles hang up signal
+
+print('Program running. Press Ctrl+C to trigger the signal.')
+
+while True:
+    try:
+        # Keep the program running until a signal is received
+        pass
+    except KeyboardInterrupt:
+        # Handle KeyboardInterrupt if signal.signal is not used
+        signal_handler(signal.SIGINT, None)
+
+```
+
+This script sets up a signal handler that listens for SIGINT (triggered by
+Ctrl+C). When the signal is detected, the signal_handler function is executed,
+printing a message and performing a specified operation before exiting. Other
+signals like SIGTERM (termination signal) and SIGHUP (hang up signal) can be
+handled similarly.
